@@ -1,0 +1,33 @@
+{
+  "name": "KettleTrack - Trainingslog",
+  "short_name": "KettleTrack",
+  "description": "Dein persönlicher Kettlebell Trainingslog",
+  "start_url": "./kettletrack-pwa.html",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#111827",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "fitness", "sports"],
+  "screenshots": [
+    {
+      "src": "screenshot.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ]
+}
