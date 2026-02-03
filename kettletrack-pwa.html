@@ -8,7 +8,7 @@
     <!-- PWA Meta Tags -->
     <meta name="description" content="Dein persönlicher Kettlebell Trainingslog">
     <meta name="theme-color" content="#111827">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KettleTrack">
     
@@ -20,9 +20,10 @@
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     
-    <!-- React -->
+    <!-- React with Babel for JSX -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
 * {
@@ -163,7 +164,6 @@ body {
   appearance: none;
 }
 
-/* iOS Safari specific fix for date input */
 input[type="date"] {
   min-height: 2.5rem;
   max-height: 2.5rem;
@@ -331,7 +331,6 @@ input[type="date"] {
   margin-bottom: 0.5rem;
 }
 
-/* PWA Install Banner */
 .install-banner {
   position: fixed;
   bottom: 0;
@@ -432,7 +431,7 @@ input[type="date"] {
 <body>
     <div id="root"></div>
     
-    <script>
+    <script type="text/babel">
 const { useState, useEffect } = React;
 
 const TrainingLogForm = () => {
@@ -483,9 +482,7 @@ const TrainingLogForm = () => {
 
   const activePlan = trainingPlan || defaultTrainingPlan;
 
-  // PWA Install Handler
   useEffect(() => {
-    // Load entries from localStorage
     const savedEntries = localStorage.getItem('kettletrack-entries');
     if (savedEntries) {
       try {
@@ -495,7 +492,6 @@ const TrainingLogForm = () => {
       }
     }
 
-    // Load training plan from localStorage
     const savedPlan = localStorage.getItem('kettletrack-plan');
     if (savedPlan) {
       try {
@@ -505,12 +501,10 @@ const TrainingLogForm = () => {
       }
     }
 
-    // PWA install prompt
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
       
-      // Check if already installed
       if (!window.matchMedia('(display-mode: standalone)').matches) {
         setShowInstallBanner(true);
       }
@@ -518,7 +512,6 @@ const TrainingLogForm = () => {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(registration => console.log('Service Worker registered'))
@@ -530,14 +523,12 @@ const TrainingLogForm = () => {
     };
   }, []);
 
-  // Save entries to localStorage whenever they change
   useEffect(() => {
     if (entries.length > 0) {
       localStorage.setItem('kettletrack-entries', JSON.stringify(entries));
     }
   }, [entries]);
 
-  // Save training plan to localStorage whenever it changes
   useEffect(() => {
     if (trainingPlan) {
       localStorage.setItem('kettletrack-plan', JSON.stringify(trainingPlan));
@@ -696,9 +687,8 @@ const TrainingLogForm = () => {
     : [];
 
   return (
-    <>
+    <React.Fragment>
       <div className="container">
-        {/* Header */}
         <div className="card">
           <div className="header-row">
             <h1 className="title">Training Log</h1>
@@ -729,7 +719,6 @@ const TrainingLogForm = () => {
           )}
         </div>
 
-        {/* Input Form */}
         <div className="card">
           <h2 className="section-title">Neuer Eintrag</h2>
 
@@ -816,7 +805,6 @@ const TrainingLogForm = () => {
           </button>
         </div>
 
-        {/* Entries List */}
         {entries.length > 0 && (
           <div className="card">
             <h2 className="section-title">
@@ -861,7 +849,6 @@ const TrainingLogForm = () => {
           </div>
         )}
 
-        {/* Tips */}
         <div className="card">
           <h3 className="label">Tipps</h3>
           <ul className="tips-list">
@@ -874,7 +861,6 @@ const TrainingLogForm = () => {
         </div>
       </div>
 
-      {/* Install Banner */}
       {showInstallBanner && (
         <div className={`install-banner ${showInstallBanner ? 'show' : ''}`}>
           <div className="install-banner-content">
@@ -899,7 +885,7 @@ const TrainingLogForm = () => {
           </div>
         </div>
       )}
-    </>
+    </React.Fragment>
   );
 };
 
