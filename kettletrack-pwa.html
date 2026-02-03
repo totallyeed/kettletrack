@@ -301,7 +301,7 @@ input[type="date"] {
 
 @media (min-width: 640px) {
   .button-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -682,6 +682,50 @@ const TrainingLogForm = () => {
     });
   };
 
+  const shareToGoogleDrive = async () => {
+    if (entries.length === 0) {
+      alert('Keine Einträge zum Teilen!');
+      return;
+    }
+
+    const header = `| Datum | Trainingstag | Runde | Übung | Reps / Dauer | Notizen / Besonderheiten |\n| --- | --- | --- | --- | --- | --- |`;
+    const rows = entries.map(formatLogEntry).join('\n');
+    const markdown = `${header}\n${rows}`;
+
+    // Check if Web Share API is supported
+    if (navigator.share) {
+      try {
+        const blob = new Blob([markdown], { type: 'text/markdown' });
+        const file = new File([blob], `training_log_${new Date().toISOString().split('T')[0]}.md`, {
+          type: 'text/markdown',
+        });
+
+        // Check if sharing files is supported
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'KettleTrack Training Log',
+            text: 'Mein Trainingslog'
+          });
+        } else {
+          // Fallback: share as text
+          await navigator.share({
+            title: 'KettleTrack Training Log',
+            text: markdown
+          });
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Share error:', err);
+          alert('⚠️ Teilen fehlgeschlagen. Nutze stattdessen Download oder Zwischenablage.');
+        }
+      }
+    } else {
+      // Fallback for browsers without Share API
+      alert('⚠️ Teilen wird auf diesem Gerät nicht unterstützt. Nutze stattdessen Download oder Zwischenablage.');
+    }
+  };
+
   const currentExercises = currentEntry.day && activePlan[currentEntry.day] 
     ? activePlan[currentEntry.day].exercises 
     : [];
@@ -735,15 +779,14 @@ const TrainingLogForm = () => {
 
             <div className="form-group">
               <label className="label">Runde</label>
-              <select
+              <input
+                type="number"
+                min="1"
                 value={currentEntry.round}
                 onChange={(e) => handleInputChange('round', e.target.value)}
-                className="select"
-              >
-                <option value="1">Runde 1</option>
-                <option value="2">Runde 2</option>
-                <option value="3">Runde 3</option>
-              </select>
+                className="input"
+                placeholder="1"
+              />
             </div>
 
             <div className="form-group form-group-full">
@@ -842,6 +885,9 @@ const TrainingLogForm = () => {
               <button onClick={copyToClipboard} className="button-secondary">
                 In Zwischenablage kopieren
               </button>
+              <button onClick={shareToGoogleDrive} className="button-secondary">
+                📤 Teilen / Drive
+              </button>
               <button onClick={generateMarkdown} className="button-primary">
                 Als Markdown exportieren
               </button>
@@ -853,10 +899,12 @@ const TrainingLogForm = () => {
           <h3 className="label">Tipps</h3>
           <ul className="tips-list">
             <li>• Datum, Tag und Runde bleiben nach dem Eintrag gesetzt</li>
+            <li>• Runden können beliebig hoch eingegeben werden</li>
             <li>• Format einarmig: "rechts: 20 | links: 20"</li>
             <li>• Format Core: "60s + 15 Sit-ups"</li>
             <li>• Trainingsplan hochladen um Übungen zu aktualisieren</li>
             <li>• Deine Daten werden lokal auf deinem Gerät gespeichert</li>
+            <li>• 📤 Teilen-Button: Direkt zu Google Drive oder anderen Apps senden</li>
           </ul>
         </div>
       </div>
