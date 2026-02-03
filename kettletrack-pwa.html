@@ -446,6 +446,7 @@ const TrainingLogForm = () => {
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [googleAccessToken, setGoogleAccessToken] = useState(null);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = useState(false);
+  const [isSavingToDrive, setIsSavingToDrive] = useState(false);
   const [currentEntry, setCurrentEntry] = useState({
     date: new Date().toISOString().split('T')[0],
     day: '',
@@ -733,7 +734,7 @@ const TrainingLogForm = () => {
   };
 
   // Google Drive Integration
-  const GOOGLE_CLIENT_ID = '630449042583-30k2cfda9qmo12r6cadqp04ebkoe0haq.apps.googleusercontent.com'; // ← Hier deine Client ID einfügen!
+  const GOOGLE_CLIENT_ID = 'DEINE_CLIENT_ID_HIER'; // ← Hier deine Client ID einfügen!
   const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/documents';
 
   const initializeGoogleAuth = () => {
@@ -835,51 +836,56 @@ const TrainingLogForm = () => {
 
   const createGoogleDoc = async (accessToken, title, content, folderId) => {
     try {
-      // Create empty Google Doc
-      const createResponse = await fetch(
-        'https://www.googleapis.com/drive/v3/files',
+      console.log('Creating Google Doc with multipart upload...');
+      console.log('Title:', title);
+      console.log('Folder ID:', folderId);
+      console.log('Content length:', content.length);
+      
+      // Create metadata
+      const metadata = {
+        name: title,
+        mimeType: 'application/vnd.google-apps.document',
+        parents: [folderId]
+      };
+
+      // Create multipart body
+      const boundary = '-------314159265358979323846';
+      const delimiter = "\r\n--" + boundary + "\r\n";
+      const close_delim = "\r\n--" + boundary + "--";
+
+      const multipartRequestBody =
+        delimiter +
+        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+        JSON.stringify(metadata) +
+        delimiter +
+        'Content-Type: text/plain; charset=UTF-8\r\n\r\n' +
+        content +
+        close_delim;
+
+      const response = await fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': `multipart/related; boundary=${boundary}`
           },
-          body: JSON.stringify({
-            name: title,
-            mimeType: 'application/vnd.google-apps.document',
-            parents: [folderId],
-          }),
+          body: multipartRequestBody
         }
       );
 
-      const docData = await createResponse.json();
-      const docId = docData.id;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Create document failed:', response.status, errorText);
+        throw new Error(`Failed to create document: ${response.status} - ${errorText}`);
+      }
 
-      // Add content to the document
-      const requests = [
-        {
-          insertText: {
-            location: { index: 1 },
-            text: content,
-          },
-        },
-      ];
-
-      await fetch(
-        `https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ requests }),
-        }
-      );
-
-      return docId;
+      const data = await response.json();
+      console.log('Document created successfully:', data);
+      
+      return data.id;
     } catch (error) {
-      console.error('Error creating Google Doc:', error);
+      console.error('Error in createGoogleDoc:', error);
       throw error;
     }
   };
@@ -911,47 +917,72 @@ const TrainingLogForm = () => {
     }
 
     try {
-      // Show loading
-      alert('Speichere in Google Drive...');
+      setIsSavingToDrive(true);
+      console.log('Starting Google Drive save...');
 
       // Initialize Google API if needed
       if (!window.gapi || !window.gapi.client) {
+        console.log('Initializing Google API...');
         await initializeGoogleAuth();
       }
 
+      console.log('Finding/creating folders...');
       // Find or create KettleTrack folder
       const kettletrackFolderId = await findOrCreateFolder(googleAccessToken, 'KettleTrack');
+      console.log('KettleTrack folder ID:', kettletrackFolderId);
       
       // Find or create Logs subfolder
       const logsFolderId = await findOrCreateFolder(googleAccessToken, 'Logs', kettletrackFolderId);
+      console.log('Logs folder ID:', logsFolderId);
 
-      // Prepare content
-      const header = `KettleTrack Training Log\n${new Date().toLocaleDateString('de-DE')}\n\n`;
-      const tableHeader = `Datum | Trainingstag | Runde | Übung | Reps / Dauer | Notizen\n`;
-      const separator = `${'─'.repeat(80)}\n`;
-      const rows = entries.map(entry => 
-        `${entry.date} | ${entry.day} | ${entry.round} | ${entry.exercise} | ${entry.reps} | ${entry.notes || '—'}`
-      ).join('\n');
-      
-      const content = header + tableHeader + separator + rows;
-
-      // Create document
+      // Prepare content - FIXED: Better formatting for Google Docs
+      console.log('Preparing content...');
+      const date = new Date().toLocaleDateString('de-DE');
       const title = `KettleTrack_Log_${new Date().toISOString().split('T')[0]}`;
-      const docId = await createGoogleDoc(googleAccessToken, title, content, logsFolderId);
+      
+      // Create content with better structure
+      let content = `KettleTrack Training Log\n`;
+      content += `Datum: ${date}\n`;
+      content += `Anzahl Einträge: ${entries.length}\n\n`;
+      content += `${'='.repeat(100)}\n\n`;
+      
+      entries.forEach((entry, index) => {
+        content += `Eintrag ${index + 1}:\n`;
+        content += `  Datum: ${entry.date}\n`;
+        content += `  Trainingstag: ${entry.day}\n`;
+        content += `  Runde: ${entry.round}\n`;
+        content += `  Übung: ${entry.exercise}\n`;
+        content += `  Reps/Dauer: ${entry.reps}\n`;
+        if (entry.notes) {
+          content += `  Notizen: ${entry.notes}\n`;
+        }
+        content += `\n${'-'.repeat(100)}\n\n`;
+      });
 
-      alert(`✅ Erfolgreich in Google Drive gespeichert!\n\nOrdner: KettleTrack/Logs/\nDatei: ${title}`);
+      console.log('Creating document:', title);
+      console.log('Content preview:', content.substring(0, 200) + '...');
+      console.log('Total content length:', content.length, 'characters');
+      
+      const docId = await createGoogleDoc(googleAccessToken, title, content, logsFolderId);
+      console.log('Document created with ID:', docId);
+
+      setIsSavingToDrive(false);
+      alert(`✅ Erfolgreich in Google Drive gespeichert!\n\nOrdner: KettleTrack/Logs/\nDatei: ${title}\n\n${entries.length} Einträge gespeichert`);
       
     } catch (error) {
       console.error('Error saving to Google Drive:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       
-      if (error.message && error.message.includes('401')) {
+      setIsSavingToDrive(false);
+      
+      if (error.status === 401 || (error.message && error.message.includes('401'))) {
         // Token expired
         localStorage.removeItem('google_access_token');
         setGoogleAccessToken(null);
         setIsGoogleAuthorized(false);
         alert('⚠️ Anmeldung abgelaufen. Bitte versuche es erneut.');
       } else {
-        alert('⚠️ Fehler beim Speichern in Google Drive. Bitte versuche es erneut oder nutze eine andere Export-Methode.');
+        alert(`⚠️ Fehler beim Speichern in Google Drive.\n\nDetails: ${error.message || 'Unbekannter Fehler'}\n\nBitte öffne die Browser-Konsole (F12) für mehr Details.`);
       }
     }
   };
@@ -1118,8 +1149,8 @@ const TrainingLogForm = () => {
               <button onClick={shareToGoogleDrive} className="button-secondary">
                 📤 Teilen (.md)
               </button>
-              <button onClick={saveToGoogleDrive} className="button-primary">
-                💾 In Drive speichern
+              <button onClick={saveToGoogleDrive} className="button-primary" disabled={isSavingToDrive}>
+                {isSavingToDrive ? '⏳ Speichere...' : '💾 In Drive speichern'}
               </button>
             </div>
             <button onClick={generateMarkdown} className="button-secondary" style={{marginTop: '0.75rem', width: '100%'}}>
