@@ -764,7 +764,27 @@ const TrainingLogForm = () => {
     console.log('=== PARSING GOOGLE DOC ===');
     console.log('Content length:', content.length);
     
-    const entryBlocks = content.split(/\n-{50,}\n/).filter(block => block.trim());
+    // Try different splitting strategies
+    let entryBlocks = [];
+    
+    // Strategy 1: Split by "Eintrag X:" pattern
+    const entryPattern = /Eintrag \d+:/g;
+    const matches = [...content.matchAll(entryPattern)];
+    
+    if (matches.length > 0) {
+      console.log('Using Eintrag pattern, found:', matches.length);
+      for (let i = 0; i < matches.length; i++) {
+        const startIdx = matches[i].index;
+        const endIdx = i < matches.length - 1 ? matches[i + 1].index : content.length;
+        const block = content.substring(startIdx, endIdx);
+        entryBlocks.push(block);
+      }
+    } else {
+      // Strategy 2: Split by separator lines (dashes)
+      entryBlocks = content.split(/\n[-=]{30,}\n/).filter(block => block.trim());
+      console.log('Using separator pattern, found:', entryBlocks.length);
+    }
+    
     console.log('Found entry blocks:', entryBlocks.length);
     
     for (const block of entryBlocks) {
