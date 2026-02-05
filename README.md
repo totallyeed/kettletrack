@@ -1,59 +1,17 @@
-# KettleTrack PWA 🏋️
+# KettleTrack PWA 🏋️ v2.0
 
 Dein persönlicher Kettlebell Trainingslog als Progressive Web App - installierbar auf iOS, Android und Desktop!
 
-## 📦 Was ist enthalten?
+## 🆕 Was ist neu in v2.0?
 
-- **kettletrack-pwa.html** - Die Haupt-App (alles in einer Datei)
-- **manifest.json** - PWA Manifest für Installation
-- **service-worker.js** - Offline-Funktionalität und Caching
-- **create-icons.html** - Tool zum Generieren der App-Icons
+### 🎯 Hauptfeatures
+- ✨ **Accordion-UI**: Übersichtliche, klappbare Bereiche
+- 🔄 **7-Tage-Sync**: Automatisches Laden der letzten Trainings aus Google Drive
+- 📊 **Vergleichswerte**: Sieh deine letzten 3 Sessions bei jeder Übung
+- 💾 **Exercise History**: Speichert automatisch deine Fortschritte
+- 🗑️ **Alle löschen**: Button zum Zurücksetzen aller Einträge
 
-## 🚀 Installation & Deployment
-
-### Option 1: GitHub Pages (Kostenlos & Einfach)
-
-1. Erstelle ein neues GitHub Repository
-2. Lade folgende Dateien hoch:
-   - `kettletrack-pwa.html`
-   - `manifest.json`
-   - `service-worker.js`
-   - `icon-192.png` (siehe Icon-Erstellung unten)
-   - `icon-512.png` (siehe Icon-Erstellung unten)
-
-3. Gehe zu Repository Settings → Pages
-4. Wähle Branch "main" und "/" als Root
-5. Deine App ist dann unter: `https://[dein-username].github.io/[repo-name]/kettletrack-pwa.html`
-
-### Option 2: Netlify/Vercel (Noch einfacher)
-
-1. Erstelle Account bei [Netlify](https://netlify.com) oder [Vercel](https://vercel.com)
-2. Ziehe alle Dateien in den Upload-Bereich
-3. App ist sofort live!
-
-### Option 3: Eigener Server
-
-Lade alle Dateien auf deinen Webspace hoch. Die App benötigt HTTPS für PWA-Features!
-
-## 🎨 Icons erstellen
-
-Es gibt zwei Wege, die Icons zu erstellen:
-
-### Weg 1: Mit dem Generator (Empfohlen)
-1. Öffne `create-icons.html` in deinem Browser
-2. Klicke auf "Download 192x192" und "Download 512x512"
-3. Speichere die Dateien als `icon-192.png` und `icon-512.png`
-
-### Weg 2: Eigene Icons (Professionell)
-Erstelle eigene Icons mit einem Tool wie:
-- [Figma](https://figma.com)
-- [Canva](https://canva.com)
-- Photoshop/Illustrator
-
-**Wichtig:**
-- icon-192.png: 192 × 192 Pixel
-- icon-512.png: 512 × 512 Pixel
-- Format: PNG mit transparentem Hintergrund (optional)
+[Siehe CHANGELOG.md für Details](CHANGELOG.md)
 
 ## 📱 Installation auf dem Handy
 
@@ -80,31 +38,51 @@ Erstelle eigene Icons mit einem Tool wie:
 2. Klicke auf das **Install-Symbol** in der Adressleiste (⊕ oder ⬇)
 3. Oder: Menü → **"KettleTrack installieren"**
 
+---
+
 ## ✨ Features
 
-### Bereits implementiert:
-- ✅ Trainingseinträge erfassen (Datum, Tag, Runde, Übung, Reps, Notizen)
-- ✅ Lokale Datenspeicherung (deine Daten bleiben auf deinem Gerät)
-- ✅ Export als Markdown-Datei
-- ✅ Zwischenablage-Funktion
-- ✅ Trainingsplan hochladen (.md Dateien)
-- ✅ Offline-Funktionalität
-- ✅ Installierbar als App
-- ✅ Auto-Save (Daten gehen nie verloren)
+### 🎯 Kern-Features
+- ✅ **Trainingseinträge erfassen**: Datum, Tag, Runde, Übung, Reps, Notizen
+- ✅ **Accordion-UI**: Klappbare Bereiche für bessere Übersicht
+- ✅ **Vergleichswerte**: Sieh deine letzten 3 Sessions bei jeder Übung
+- ✅ **Exercise History**: Automatische Fortschrittsspeicherung (letzte 10 Sessions pro Übung)
+- ✅ **7-Tage-Sync**: Lade deine letzten Trainings aus Google Drive
+- ✅ **Google Drive Integration**: Speichere Logs als Google Docs
+- ✅ **Lokale Datenspeicherung**: Deine Daten bleiben auf deinem Gerät
+- ✅ **Export als Markdown**: Download oder teilen als .md Datei
+- ✅ **Zwischenablage-Funktion**: Schnell kopieren & einfügen
+- ✅ **Trainingsplan hochladen**: .md Dateien hochladen
+- ✅ **Offline-Funktionalität**: Funktioniert ohne Internet
+- ✅ **Installierbar als App**: Wie eine native App nutzen
+- ✅ **Auto-Save**: Daten gehen nie verloren
 
-### PWA-Features:
+### 🆕 NEU in v2.0
+- 🔄 **Sync-Funktion**: Lädt letzte 7 Tage aus Google Drive
+- 📊 **Vergleichswerte-Anzeige**: Info-Box mit letzten Sessions
+- 💾 **Exercise History**: localStorage für Fortschritt
+- 🗑️ **Alle löschen**: Einträge zurücksetzen
+- 🎨 **Besseres UI**: Accordion-basiert, moderne Cards
+- ⚙️ **Einstellungen-Bereich**: Google Account + Plan Upload
+
+### 📱 PWA-Features
 - 📱 Läuft wie eine native App
 - 🔌 Funktioniert offline
 - 💾 Automatische Updates im Hintergrund
 - 🚀 Schneller Start
 - 🔒 Sicher (nur du hast Zugriff auf deine Daten)
 
+---
+
 ## 🛠️ Technische Details
 
-### Gespeicherte Daten
-Alle Daten werden im **localStorage** deines Browsers gespeichert:
+### Gespeicherte Daten (localStorage)
 - `kettletrack-entries` - Deine Trainingseinträge
 - `kettletrack-plan` - Dein hochgeladener Trainingsplan
+- `kettletrack-exercise-history` - 🆕 Letzte 10 Sessions pro Übung
+- `kettletrack-accordion-states` - 🆕 UI-Zustand der Accordions
+- `kettletrack-last-sync` - 🆕 Zeitstempel des letzten Syncs
+- `google_access_token` - Google Drive OAuth Token
 
 ### Cache-Strategie
 Der Service Worker cached:
@@ -120,31 +98,7 @@ Der Service Worker cached:
 - ✅ Desktop Chrome/Edge/Firefox
 - ⚠️ iOS erfordert Safari (nicht Chrome iOS)
 
-## 🔧 Anpassungen
-
-### Farben ändern
-In `kettletrack-pwa.html` kannst du die Farben anpassen:
-
-```html
-<meta name="theme-color" content="#111827"> <!-- App-Farbe -->
-```
-
-```json
-// In manifest.json
-"background_color": "#f9fafb",
-"theme_color": "#111827"
-```
-
-### Trainingsplan anpassen
-Der Standard-Trainingsplan ist im Code enthalten. Du kannst:
-1. Den Code direkt anpassen (im `defaultTrainingPlan` Objekt)
-2. Oder: Eine `.md` Datei hochladen über die App
-
-### Service Worker Update
-Ändere die Version in `service-worker.js`:
-```javascript
-const CACHE_NAME = 'kettletrack-v2'; // Version hochzählen
-```
+---
 
 ## 📝 Trainingsplan Format
 
@@ -156,6 +110,8 @@ Wenn du einen eigenen Trainingsplan hochladen möchtest, nutze dieses Format:
 | Montag | Upper Body Push | 1. Kettlebell Overhead Press 2. Kettlebell Floor Press |
 | Dienstag | Lower Body + Core | 1. Kettlebell Goblet Squat 2. Kettlebell Swing |
 ```
+
+---
 
 ## 🐛 Troubleshooting
 
@@ -173,44 +129,36 @@ Wenn du einen eigenen Trainingsplan hochladen möchtest, nutze dieses Format:
 - Öffne die App einmal online, damit der Cache gefüllt wird
 - Prüfe ob der Service Worker registriert ist (Browser DevTools → Application → Service Workers)
 
-### Icons werden nicht angezeigt
-- Prüfe Dateinamen: genau `icon-192.png` und `icon-512.png`
-- Prüfe ob Dateien im gleichen Ordner wie die HTML-Datei liegen
-- Icons müssen PNG-Format haben
+### Sync funktioniert nicht
+- Stelle sicher, dass du mit Google angemeldet bist (⚙️ Einstellungen)
+- Prüfe ob Dateien im Format `KettleTrack_Log_YYYY-MM-DD` vorliegen
+- Dateien müssen im Ordner `KettleTrack/Logs/` liegen
+- Prüfe Browser-Konsole (F12) für Fehlermeldungen
+
+### Vergleichswerte erscheinen nicht
+- Führe einmal einen Sync durch (🔄 Synchronisierung)
+- Oder: Füge Einträge hinzu und speichere in Drive
+- Exercise History wird automatisch aufgebaut
+
+---
 
 ## 🔐 Datenschutz
 
 - **Alle Daten bleiben auf deinem Gerät** (localStorage)
-- Keine Server-Kommunikation
+- Google Drive Zugriff nur für von der App erstellte Dateien
+- Keine Server-Kommunikation (außer Google Drive API)
 - Keine Tracking-Cookies
 - Keine Analytics
 - Open Source - du kannst den Code einsehen
+
+---
 
 ## 📄 Lizenz
 
 MIT License - Frei verwendbar für private und kommerzielle Zwecke
 
-## 🎯 Nächste Schritte
 
-1. Icons erstellen
-2. App auf GitHub Pages/Netlify deployen
-3. Auf deinem Handy installieren
-4. Training tracken! 💪
-
-## 💡 Tipps
-
-- **Backup erstellen:** Exportiere regelmäßig deine Einträge als Markdown
-- **Schneller Zugriff:** Platziere die App im Dock/auf dem Home-Bildschirm
-- **Offline nutzen:** Einmal geladen, funktioniert die App auch ohne Internet
-- **Updates:** Bei Änderungen einfach die Dateien auf dem Server aktualisieren
-
-## 🆘 Support
-
-Probleme oder Fragen? 
-- Prüfe das Troubleshooting oben
-- Öffne ein Issue auf GitHub
-- Schau in die Browser-Konsole (F12) für Fehlermeldungen
-
----
 
 **Viel Erfolg beim Training! 🏋️💪**
+
+*Version 2.0.0 - Februar 2026*
