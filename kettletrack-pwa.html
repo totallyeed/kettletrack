@@ -761,35 +761,53 @@ const TrainingLogForm = () => {
   const parseGoogleDoc = (content) => {
     const parsedEntries = [];
     
+    console.log('=== PARSING GOOGLE DOC ===');
+    console.log('Content length:', content.length);
+    
     const entryBlocks = content.split(/\n-{50,}\n/).filter(block => block.trim());
+    console.log('Found entry blocks:', entryBlocks.length);
     
     for (const block of entryBlocks) {
       const lines = block.split('\n').map(l => l.trim()).filter(l => l);
       const entry = {};
       
       for (const line of lines) {
-        if (line.startsWith('Datum:')) {
-          entry.date = line.replace('Datum:', '').trim();
-        } else if (line.startsWith('Trainingstag:')) {
-          entry.day = line.replace('Trainingstag:', '').trim();
-        } else if (line.startsWith('Runde:')) {
-          entry.round = line.replace('Runde:', '').trim();
-        } else if (line.startsWith('Übung:')) {
-          entry.exercise = line.replace('Übung:', '').trim();
-        } else if (line.startsWith('Reps/Dauer:')) {
-          entry.reps = line.replace('Reps/Dauer:', '').trim();
-        } else if (line.startsWith('Notizen:')) {
-          entry.notes = line.replace('Notizen:', '').trim();
+        // Remove leading/trailing whitespace and check
+        const trimmedLine = line.trim();
+        
+        if (trimmedLine.startsWith('Datum:')) {
+          entry.date = trimmedLine.replace('Datum:', '').trim();
+        } else if (trimmedLine.startsWith('Trainingstag:')) {
+          entry.day = trimmedLine.replace('Trainingstag:', '').trim();
+        } else if (trimmedLine.startsWith('Runde:')) {
+          entry.round = trimmedLine.replace('Runde:', '').trim();
+        } else if (trimmedLine.startsWith('Übung:')) {
+          entry.exercise = trimmedLine.replace('Übung:', '').trim();
+        } else if (trimmedLine.startsWith('Reps/Dauer:')) {
+          entry.reps = trimmedLine.replace('Reps/Dauer:', '').trim();
+        } else if (trimmedLine.startsWith('Notizen:')) {
+          entry.notes = trimmedLine.replace('Notizen:', '').trim();
         }
       }
       
       if (entry.date && entry.day && entry.exercise && entry.reps) {
+        console.log('✅ Parsed entry:', entry.exercise, '-', entry.reps);
         parsedEntries.push({
           ...entry,
           id: Date.now() + Math.random()
         });
+      } else {
+        console.log('❌ Incomplete entry, missing:', 
+          !entry.date ? 'date' : '',
+          !entry.day ? 'day' : '',
+          !entry.exercise ? 'exercise' : '',
+          !entry.reps ? 'reps' : ''
+        );
       }
     }
+    
+    console.log('=== PARSING COMPLETE ===');
+    console.log('Total valid entries:', parsedEntries.length);
     
     return parsedEntries;
   };
