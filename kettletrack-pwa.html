@@ -42,62 +42,435 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f9fafb;
   min-height: 100vh;
+  padding-bottom: 2rem;
 }
 
 .container {
   max-width: 48rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
-.card {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e7eb;
+/* ===== HEADER ===== */
+.app-header {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: white;
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.header-row {
+.app-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-header-icon {
+  font-size: 1.75rem;
+}
+
+/* ===== ACCORDION CARD ===== */
+.accordion-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.accordion-header {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  background: white;
+  transition: background-color 0.2s;
+  user-select: none;
 }
 
-.title {
-  font-size: 1.5rem;
+.accordion-header:hover {
+  background: #f9fafb;
+}
+
+.accordion-header:active {
+  background: #f3f4f6;
+}
+
+.accordion-title {
+  font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.upload-button {
-  font-size: 0.875rem;
-  color: #4b5563;
-  text-decoration: underline;
-  background: none;
-  border: none;
-  cursor: pointer;
+.accordion-icon {
+  font-size: 1.25rem;
 }
 
-.upload-button:hover {
-  color: #111827;
-}
-
-.subtitle {
-  font-size: 0.875rem;
+.accordion-chevron {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
   color: #6b7280;
 }
 
-.upload-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
+.accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.accordion-content.open {
+  max-height: 2000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.accordion-body {
+  padding: 1.25rem;
   border-top: 1px solid #e5e7eb;
+}
+
+/* ===== FORM STYLES ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group-full {
+  grid-column: span 2;
 }
 
 .label {
   display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  height: 2.75rem;
+  line-height: 1.5;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="date"] {
+  min-height: 2.75rem;
+  max-height: 2.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.input:focus, .select:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:disabled, .select:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ===== EXERCISE INFO BOX ===== */
+.exercise-info-box {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exercise-info-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #166534;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.exercise-info-stats {
+  font-size: 0.875rem;
+  color: #15803d;
+  line-height: 1.6;
+}
+
+.exercise-info-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.exercise-info-stat:last-child {
+  margin-bottom: 0;
+}
+
+.exercise-info-label {
+  font-weight: 500;
+  min-width: 4rem;
+}
+
+.exercise-info-value {
+  color: #166534;
+  font-weight: 600;
+}
+
+.exercise-info-empty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ===== BUTTONS ===== */
+.button-primary {
+  width: 100%;
+  margin-top: 1rem;
+  background-color: #111827;
+  color: white;
+  font-weight: 600;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-primary:hover {
+  background-color: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+}
+
+.button-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-secondary {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-secondary:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.button-secondary:active {
+  background-color: #f3f4f6;
+}
+
+.button-danger {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+}
+
+.button-danger:hover {
+  background-color: #b91c1c;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.button-grid-full {
+  grid-column: span 2;
+}
+
+/* ===== ENTRIES LIST ===== */
+.entries-list {
+  max-height: 24rem;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.entry-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s;
+}
+
+.entry-card:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.entry-content {
+  flex: 1;
+}
+
+.entry-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.badge-date {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.badge-day {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-round {
+  background-color: #111827;
+  color: white;
+}
+
+.entry-exercise {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.entry-reps {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.entry-notes {
+  margin-left: 0.5rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.delete-button {
+  color: #9ca3af;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-button:hover {
+  color: #dc2626;
+}
+
+/* ===== SYNC SECTION ===== */
+.sync-status {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #0c4a6e;
+}
+
+.sync-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* ===== SETTINGS SECTION ===== */
+.settings-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-label {
   font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
@@ -133,302 +506,62 @@ body {
   color: #6b7280;
 }
 
-.section-title {
-  font-size: 1.125rem;
-  font-weight: 500;
-  color: #111827;
-  margin-bottom: 1rem;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group-full {
-  grid-column: span 2;
-}
-
-.input, .select {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  outline: none;
-  height: 2.5rem;
-  line-height: 1.5;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-input[type="date"] {
-  min-height: 2.5rem;
-  max-height: 2.5rem;
-  display: flex;
-  align-items: center;
-}
-
-.input:focus, .select:focus {
-  ring: 2px;
-  ring-color: #111827;
-  border-color: transparent;
-}
-
-.input::placeholder {
-  color: #9ca3af;
-}
-
-.input:disabled, .select:disabled {
-  background-color: #f9fafb;
-  color: #9ca3af;
-}
-
-.button-primary {
-  width: 100%;
-  margin-top: 1.5rem;
-  background-color: #111827;
-  color: white;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  border: none;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.button-primary:hover {
-  background-color: #1f2937;
-}
-
-.entries-list {
-  max-height: 24rem;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-
-.entry-card {
+.google-account-status {
+  background: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  padding: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #374151;
   margin-bottom: 0.75rem;
-  transition: background-color 0.2s;
 }
 
-.entry-card:hover {
-  background-color: #f9fafb;
+.google-account-connected {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
 }
 
-.entry-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.entry-content {
-  flex: 1;
-}
-
-.entry-badges {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-}
-
-.badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-weight: 500;
-}
-
-.badge-date {
-  color: #6b7280;
-}
-
-.badge-day {
-  background-color: #f3f4f6;
-  color: #374151;
-}
-
-.badge-round {
-  background-color: #111827;
-  color: white;
-}
-
-.entry-exercise {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.entry-reps {
-  font-size: 0.875rem;
-  color: #4b5563;
-}
-
-.entry-notes {
-  margin-left: 0.5rem;
-  color: #6b7280;
-  font-style: italic;
-}
-
-.delete-button {
-  color: #9ca3af;
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  margin-left: 1rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.delete-button:hover {
-  color: #dc2626;
-}
-
-.button-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .button-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.button-secondary {
-  background-color: white;
-  border: 1px solid #d1d5db;
-  color: #374151;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.button-secondary:hover {
-  background-color: #f9fafb;
-}
-
-.tips-list {
-  font-size: 0.75rem;
-  color: #4b5563;
-  list-style: none;
-}
-
-.tips-list li {
-  margin-bottom: 0.5rem;
-}
-
-.install-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111827;
-  color: white;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  z-index: 1000;
-  transform: translateY(100%);
-  transition: transform 0.3s ease-in-out;
-}
-
-.install-banner.show {
-  transform: translateY(0);
-}
-
-.install-banner-content {
-  flex: 1;
-}
-
-.install-banner-title {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.install-banner-text {
-  font-size: 0.875rem;
-  color: #d1d5db;
-}
-
-.install-banner-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.install-banner-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.install-banner-button-primary {
-  background-color: white;
-  color: #111827;
-}
-
-.install-banner-button-primary:hover {
-  background-color: #f3f4f6;
-}
-
-.install-banner-button-secondary {
-  background-color: transparent;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.3);
-}
-
-.install-banner-button-secondary:hover {
-  background-color: rgba(255,255,255,0.1);
-}
-
+/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
   .container {
-    padding: 1rem;
-  }
-  
-  .card {
-    padding: 1rem;
+    padding: 0.75rem;
   }
   
   .form-grid {
     grid-template-columns: 1fr;
   }
-
-  .install-banner {
-    flex-direction: column;
-    gap: 1rem;
+  
+  .button-grid {
+    grid-template-columns: 1fr;
   }
-
-  .install-banner-buttons {
-    width: 100%;
+  
+  .accordion-body {
+    padding: 1rem;
   }
-
-  .install-banner-button {
-    flex: 1;
+  
+  .app-header {
+    padding: 1rem;
   }
+  
+  .app-header-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ===== LOADING SPINNER ===== */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
     </style>
 </head>
@@ -436,17 +569,27 @@ input[type="date"] {
     <div id="root"></div>
     
     <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useCallback } = React;
 
 const TrainingLogForm = () => {
+  // ===== STATE =====
   const [entries, setEntries] = useState([]);
   const [trainingPlan, setTrainingPlan] = useState(null);
-  const [showUpload, setShowUpload] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const [exerciseHistory, setExerciseHistory] = useState({});
   const [googleAccessToken, setGoogleAccessToken] = useState(null);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [isSavingToDrive, setIsSavingToDrive] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(null);
+  
+  // Accordion states
+  const [accordionStates, setAccordionStates] = useState({
+    newEntry: true,
+    myEntries: true,
+    sync: false,
+    settings: false
+  });
+  
   const [currentEntry, setCurrentEntry] = useState({
     date: new Date().toISOString().split('T')[0],
     day: '',
@@ -456,6 +599,7 @@ const TrainingLogForm = () => {
     notes: ''
   });
 
+  // ===== DEFAULT TRAINING PLAN =====
   const defaultTrainingPlan = {
     'Montag': {
       label: 'Upper Body Push',
@@ -489,6 +633,11 @@ const TrainingLogForm = () => {
 
   const activePlan = trainingPlan || defaultTrainingPlan;
 
+  // ===== GOOGLE DRIVE CONFIG =====
+  const GOOGLE_CLIENT_ID = '630449042583-30k2cfda9qmo12r6cadqp04ebkoe0haq.apps.googleusercontent.com';
+  const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly';
+
+  // ===== LOAD DATA ON MOUNT =====
   useEffect(() => {
     const savedEntries = localStorage.getItem('kettletrack-entries');
     if (savedEntries) {
@@ -508,28 +657,43 @@ const TrainingLogForm = () => {
       }
     }
 
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        setShowInstallBanner(true);
+    const savedHistory = localStorage.getItem('kettletrack-exercise-history');
+    if (savedHistory) {
+      try {
+        setExerciseHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error('Error loading history:', e);
       }
-    };
+    }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    const savedAccordion = localStorage.getItem('kettletrack-accordion-states');
+    if (savedAccordion) {
+      try {
+        setAccordionStates(JSON.parse(savedAccordion));
+      } catch (e) {
+        console.error('Error loading accordion states:', e);
+      }
+    }
+
+    const savedSyncTime = localStorage.getItem('kettletrack-last-sync');
+    if (savedSyncTime) {
+      setLastSyncTime(new Date(savedSyncTime));
+    }
+
+    const savedToken = localStorage.getItem('google_access_token');
+    if (savedToken) {
+      setGoogleAccessToken(savedToken);
+      setIsGoogleAuthorized(true);
+    }
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(registration => console.log('Service Worker registered'))
         .catch(err => console.log('Service Worker registration failed:', err));
     }
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
   }, []);
 
+  // ===== SAVE DATA ON CHANGE =====
   useEffect(() => {
     if (entries.length > 0) {
       localStorage.setItem('kettletrack-entries', JSON.stringify(entries));
@@ -542,26 +706,25 @@ const TrainingLogForm = () => {
     }
   }, [trainingPlan]);
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      return;
+  useEffect(() => {
+    if (Object.keys(exerciseHistory).length > 0) {
+      localStorage.setItem('kettletrack-exercise-history', JSON.stringify(exerciseHistory));
     }
+  }, [exerciseHistory]);
 
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    }
-    
-    setDeferredPrompt(null);
-    setShowInstallBanner(false);
+  useEffect(() => {
+    localStorage.setItem('kettletrack-accordion-states', JSON.stringify(accordionStates));
+  }, [accordionStates]);
+
+  // ===== ACCORDION TOGGLE =====
+  const toggleAccordion = (section) => {
+    setAccordionStates(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
-  const handleInstallDismiss = () => {
-    setShowInstallBanner(false);
-  };
-
+  // ===== TRAINING PLAN PARSER =====
   const parseTrainingPlan = (text) => {
     const lines = text.split('\n').filter(line => line.trim().startsWith('|'));
     const plan = {};
@@ -594,6 +757,402 @@ const TrainingLogForm = () => {
     return Object.keys(plan).length > 0 ? plan : null;
   };
 
+  // ===== GOOGLE DOC PARSER =====
+  const parseGoogleDoc = (content) => {
+    const parsedEntries = [];
+    
+    const entryBlocks = content.split(/\n-{50,}\n/).filter(block => block.trim());
+    
+    for (const block of entryBlocks) {
+      const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+      const entry = {};
+      
+      for (const line of lines) {
+        if (line.startsWith('Datum:')) {
+          entry.date = line.replace('Datum:', '').trim();
+        } else if (line.startsWith('Trainingstag:')) {
+          entry.day = line.replace('Trainingstag:', '').trim();
+        } else if (line.startsWith('Runde:')) {
+          entry.round = line.replace('Runde:', '').trim();
+        } else if (line.startsWith('Übung:')) {
+          entry.exercise = line.replace('Übung:', '').trim();
+        } else if (line.startsWith('Reps/Dauer:')) {
+          entry.reps = line.replace('Reps/Dauer:', '').trim();
+        } else if (line.startsWith('Notizen:')) {
+          entry.notes = line.replace('Notizen:', '').trim();
+        }
+      }
+      
+      if (entry.date && entry.day && entry.exercise && entry.reps) {
+        parsedEntries.push({
+          ...entry,
+          id: Date.now() + Math.random()
+        });
+      }
+    }
+    
+    return parsedEntries;
+  };
+
+  // ===== UPDATE EXERCISE HISTORY =====
+  const updateExerciseHistory = useCallback((newEntries) => {
+    const history = { ...exerciseHistory };
+    
+    for (const entry of newEntries) {
+      if (!entry.exercise || !entry.reps) continue;
+      
+      if (!history[entry.exercise]) {
+        history[entry.exercise] = [];
+      }
+      
+      history[entry.exercise].push({
+        reps: entry.reps,
+        date: entry.date,
+        notes: entry.notes || ''
+      });
+      
+      history[entry.exercise].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      history[entry.exercise] = history[entry.exercise].slice(0, 10);
+    }
+    
+    setExerciseHistory(history);
+  }, [exerciseHistory]);
+
+  // ===== GET EXERCISE STATS =====
+  const getExerciseStats = (exerciseName) => {
+    const history = exerciseHistory[exerciseName];
+    if (!history || history.length === 0) return null;
+    
+    const recent = history.slice(0, 3);
+    
+    return {
+      last: recent[0]?.reps || 'Keine Daten',
+      recent: recent.map(h => h.reps)
+    };
+  };
+
+  // ===== GOOGLE AUTH =====
+  const initializeGoogleAuth = () => {
+    return new Promise((resolve, reject) => {
+      if (!window.gapi) {
+        reject(new Error('Google API not loaded'));
+        return;
+      }
+
+      window.gapi.load('client', async () => {
+        try {
+          await window.gapi.client.init({
+            discoveryDocs: [
+              'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+              'https://docs.googleapis.com/$discovery/rest?version=v1'
+            ]
+          });
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
+    });
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: SCOPES,
+        callback: (response) => {
+          if (response.access_token) {
+            setGoogleAccessToken(response.access_token);
+            setIsGoogleAuthorized(true);
+            localStorage.setItem('google_access_token', response.access_token);
+          }
+        },
+      });
+
+      client.requestAccessToken();
+    } catch (error) {
+      console.error('Google login error:', error);
+      alert('⚠️ Anmeldung fehlgeschlagen. Bitte versuche es erneut.');
+    }
+  };
+
+  const handleGoogleLogout = () => {
+    setGoogleAccessToken(null);
+    setIsGoogleAuthorized(false);
+    localStorage.removeItem('google_access_token');
+    alert('✅ Erfolgreich abgemeldet');
+  };
+
+  // ===== SYNC LAST 7 DAYS =====
+  const syncLastSevenDays = async () => {
+    if (!googleAccessToken || !isGoogleAuthorized) {
+      const confirmAuth = confirm('Du musst dich mit Google anmelden um zu synchronisieren. Jetzt anmelden?');
+      if (!confirmAuth) return;
+      await handleGoogleLogin();
+      return;
+    }
+
+    try {
+      setIsSyncing(true);
+      console.log('Starting sync of last 7 days...');
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const sevenDaysAgoISO = sevenDaysAgo.toISOString();
+
+      const searchParams = new URLSearchParams({
+        q: `name contains 'KettleTrack_Log_' and mimeType='application/vnd.google-apps.document' and modifiedTime > '${sevenDaysAgoISO}' and trashed=false`,
+        fields: 'files(id, name, modifiedTime)',
+        orderBy: 'modifiedTime desc'
+      });
+
+      const searchResponse = await fetch(
+        `https://www.googleapis.com/drive/v3/files?${searchParams}`,
+        {
+          headers: {
+            Authorization: `Bearer ${googleAccessToken}`,
+          },
+        }
+      );
+
+      if (!searchResponse.ok) {
+        throw new Error('Search failed');
+      }
+
+      const searchData = await searchResponse.json();
+      const files = searchData.files || [];
+
+      console.log(`Found ${files.length} files from last 7 days`);
+
+      if (files.length === 0) {
+        alert('ℹ️ Keine Trainingslog-Dateien der letzten 7 Tage gefunden.');
+        setIsSyncing(false);
+        return;
+      }
+
+      const allParsedEntries = [];
+
+      for (const file of files) {
+        console.log(`Downloading file: ${file.name}`);
+        
+        const exportResponse = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${file.id}/export?mimeType=text/plain`,
+          {
+            headers: {
+              Authorization: `Bearer ${googleAccessToken}`,
+            },
+          }
+        );
+
+        if (exportResponse.ok) {
+          const content = await exportResponse.text();
+          const parsedEntries = parseGoogleDoc(content);
+          allParsedEntries.push(...parsedEntries);
+          console.log(`Parsed ${parsedEntries.length} entries from ${file.name}`);
+        }
+      }
+
+      console.log(`Total parsed entries: ${allParsedEntries.length}`);
+
+      updateExerciseHistory(allParsedEntries);
+
+      const now = new Date();
+      setLastSyncTime(now);
+      localStorage.setItem('kettletrack-last-sync', now.toISOString());
+
+      setIsSyncing(false);
+      alert(`✅ Synchronisierung erfolgreich!\n\n${files.length} Dateien geladen\n${allParsedEntries.length} Einträge aktualisiert`);
+
+    } catch (error) {
+      console.error('Sync error:', error);
+      setIsSyncing(false);
+      
+      if (error.status === 401 || (error.message && error.message.includes('401'))) {
+        localStorage.removeItem('google_access_token');
+        setGoogleAccessToken(null);
+        setIsGoogleAuthorized(false);
+        alert('⚠️ Anmeldung abgelaufen. Bitte versuche es erneut.');
+      } else {
+        alert(`⚠️ Fehler beim Synchronisieren: ${error.message}`);
+      }
+    }
+  };
+
+  // ===== SAVE TO GOOGLE DRIVE =====
+  const findOrCreateFolder = async (accessToken, folderName, parentFolderId = null) => {
+    try {
+      const searchParams = new URLSearchParams({
+        q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false${parentFolderId ? ` and '${parentFolderId}' in parents` : ''}`,
+        fields: 'files(id, name)',
+      });
+
+      const searchResponse = await fetch(
+        `https://www.googleapis.com/drive/v3/files?${searchParams}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const searchData = await searchResponse.json();
+
+      if (searchData.files && searchData.files.length > 0) {
+        return searchData.files[0].id;
+      }
+
+      const metadata = {
+        name: folderName,
+        mimeType: 'application/vnd.google-apps.folder',
+      };
+
+      if (parentFolderId) {
+        metadata.parents = [parentFolderId];
+      }
+
+      const createResponse = await fetch(
+        'https://www.googleapis.com/drive/v3/files',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(metadata),
+        }
+      );
+
+      const createData = await createResponse.json();
+      return createData.id;
+    } catch (error) {
+      console.error('Error creating folder:', error);
+      throw error;
+    }
+  };
+
+  const createGoogleDoc = async (accessToken, title, content, folderId) => {
+    try {
+      const metadata = {
+        name: title,
+        mimeType: 'application/vnd.google-apps.document',
+        parents: [folderId]
+      };
+
+      const boundary = '-------314159265358979323846';
+      const delimiter = "\r\n--" + boundary + "\r\n";
+      const close_delim = "\r\n--" + boundary + "--";
+
+      const multipartRequestBody =
+        delimiter +
+        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+        JSON.stringify(metadata) +
+        delimiter +
+        'Content-Type: text/plain; charset=UTF-8\r\n\r\n' +
+        content +
+        close_delim;
+
+      const response = await fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': `multipart/related; boundary=${boundary}`
+          },
+          body: multipartRequestBody
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to create document: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.id;
+    } catch (error) {
+      console.error('Error in createGoogleDoc:', error);
+      throw error;
+    }
+  };
+
+  const saveToGoogleDrive = async () => {
+    if (entries.length === 0) {
+      alert('Keine Einträge zum Speichern!');
+      return;
+    }
+
+    if (!googleAccessToken || !isGoogleAuthorized) {
+      const savedToken = localStorage.getItem('google_access_token');
+      if (savedToken) {
+        setGoogleAccessToken(savedToken);
+        setIsGoogleAuthorized(true);
+        setTimeout(() => saveToGoogleDrive(), 100);
+        return;
+      }
+
+      const confirmAuth = confirm('Du musst dich mit Google anmelden um in Drive zu speichern. Jetzt anmelden?');
+      if (!confirmAuth) return;
+
+      await handleGoogleLogin();
+      return;
+    }
+
+    try {
+      setIsSavingToDrive(true);
+
+      if (!window.gapi || !window.gapi.client) {
+        await initializeGoogleAuth();
+      }
+
+      const kettletrackFolderId = await findOrCreateFolder(googleAccessToken, 'KettleTrack');
+      const logsFolderId = await findOrCreateFolder(googleAccessToken, 'Logs', kettletrackFolderId);
+
+      const date = new Date().toLocaleDateString('de-DE');
+      const title = `KettleTrack_Log_${new Date().toISOString().split('T')[0]}`;
+      
+      let content = `KettleTrack Training Log\n`;
+      content += `Datum: ${date}\n`;
+      content += `Anzahl Einträge: ${entries.length}\n\n`;
+      content += `${'='.repeat(100)}\n\n`;
+      
+      entries.forEach((entry, index) => {
+        content += `Eintrag ${index + 1}:\n`;
+        content += `  Datum: ${entry.date}\n`;
+        content += `  Trainingstag: ${entry.day}\n`;
+        content += `  Runde: ${entry.round}\n`;
+        content += `  Übung: ${entry.exercise}\n`;
+        content += `  Reps/Dauer: ${entry.reps}\n`;
+        if (entry.notes) {
+          content += `  Notizen: ${entry.notes}\n`;
+        }
+        content += `\n${'-'.repeat(100)}\n\n`;
+      });
+
+      await createGoogleDoc(googleAccessToken, title, content, logsFolderId);
+
+      updateExerciseHistory(entries);
+
+      setIsSavingToDrive(false);
+      alert(`✅ Erfolgreich in Google Drive gespeichert!\n\nOrdner: KettleTrack/Logs/\nDatei: ${title}\n\n${entries.length} Einträge gespeichert`);
+      
+    } catch (error) {
+      console.error('Error saving to Google Drive:', error);
+      setIsSavingToDrive(false);
+      
+      if (error.status === 401 || (error.message && error.message.includes('401'))) {
+        localStorage.removeItem('google_access_token');
+        setGoogleAccessToken(null);
+        setIsGoogleAuthorized(false);
+        alert('⚠️ Anmeldung abgelaufen. Bitte versuche es erneut.');
+      } else {
+        alert(`⚠️ Fehler beim Speichern in Google Drive: ${error.message}`);
+      }
+    }
+  };
+
+  // ===== FORM HANDLERS =====
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -603,7 +1162,6 @@ const TrainingLogForm = () => {
         const parsedPlan = parseTrainingPlan(content);
         if (parsedPlan) {
           setTrainingPlan(parsedPlan);
-          setShowUpload(false);
           alert('✅ Trainingsplan erfolgreich geladen!');
         } else {
           alert('⚠️ Konnte Trainingsplan nicht parsen. Bitte überprüfe das Format.');
@@ -627,7 +1185,10 @@ const TrainingLogForm = () => {
       return;
     }
 
-    setEntries(prev => [...prev, { ...currentEntry, id: Date.now() }]);
+    const newEntry = { ...currentEntry, id: Date.now() };
+    setEntries(prev => [...prev, newEntry]);
+    
+    updateExerciseHistory([newEntry]);
     
     setCurrentEntry(prev => ({
       ...prev,
@@ -641,10 +1202,17 @@ const TrainingLogForm = () => {
     setEntries(prev => prev.filter(entry => entry.id !== id));
   };
 
+  const clearAllEntries = () => {
+    if (confirm(`⚠️ Möchtest du wirklich alle ${entries.length} Einträge löschen?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`)) {
+      setEntries([]);
+      localStorage.removeItem('kettletrack-entries');
+      alert('✅ Alle Einträge wurden gelöscht');
+    }
+  };
+
+  // ===== EXPORT FUNCTIONS =====
   const formatLogEntry = (entry) => {
-    const dateParts = entry.date.split('-');
-    const formattedDate = `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
-    return `| ${formattedDate} | ${entry.day} | ${entry.round} | ${entry.exercise} | ${entry.reps} | ${entry.notes || '—'} |`;
+    return `| ${entry.date} | ${entry.day} | ${entry.round} | ${entry.exercise} | ${entry.reps} | ${entry.notes || '—'} |`;
   };
 
   const generateMarkdown = () => {
@@ -699,7 +1267,6 @@ const TrainingLogForm = () => {
     const rows = entries.map(formatLogEntry).join('\n');
     const markdown = `${header}\n${rows}`;
 
-    // Check if Web Share API is supported
     if (navigator.share) {
       try {
         const blob = new Blob([markdown], { type: 'text/markdown' });
@@ -707,7 +1274,6 @@ const TrainingLogForm = () => {
           type: 'text/markdown',
         });
 
-        // Check if sharing files is supported
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
@@ -715,7 +1281,6 @@ const TrainingLogForm = () => {
             text: 'Mein Trainingslog'
           });
         } else {
-          // Fallback: share as text
           await navigator.share({
             title: 'KettleTrack Training Log',
             text: markdown
@@ -728,289 +1293,278 @@ const TrainingLogForm = () => {
         }
       }
     } else {
-      // Fallback for browsers without Share API
       alert('⚠️ Teilen wird auf diesem Gerät nicht unterstützt. Nutze stattdessen Download oder Zwischenablage.');
     }
   };
 
-  // Google Drive Integration
-  const GOOGLE_CLIENT_ID = '630449042583-30k2cfda9qmo12r6cadqp04ebkoe0haq.apps.googleusercontent.com'; // ← Hier deine Client ID einfügen!
-  const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/documents';
-
-  const initializeGoogleAuth = () => {
-    return new Promise((resolve, reject) => {
-      if (!window.gapi) {
-        reject(new Error('Google API not loaded'));
-        return;
-      }
-
-      window.gapi.load('client', async () => {
-        try {
-          await window.gapi.client.init({
-            discoveryDocs: [
-              'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
-              'https://docs.googleapis.com/$discovery/rest?version=v1'
-            ]
-          });
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      });
-    });
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
-        scope: SCOPES,
-        callback: (response) => {
-          if (response.access_token) {
-            setGoogleAccessToken(response.access_token);
-            setIsGoogleAuthorized(true);
-            localStorage.setItem('google_access_token', response.access_token);
-          }
-        },
-      });
-
-      client.requestAccessToken();
-    } catch (error) {
-      console.error('Google login error:', error);
-      alert('⚠️ Anmeldung fehlgeschlagen. Bitte versuche es erneut.');
-    }
-  };
-
-  const findOrCreateFolder = async (accessToken, folderName, parentFolderId = null) => {
-    try {
-      // Search for existing folder
-      const searchParams = new URLSearchParams({
-        q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false${parentFolderId ? ` and '${parentFolderId}' in parents` : ''}`,
-        fields: 'files(id, name)',
-      });
-
-      const searchResponse = await fetch(
-        `https://www.googleapis.com/drive/v3/files?${searchParams}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const searchData = await searchResponse.json();
-
-      if (searchData.files && searchData.files.length > 0) {
-        return searchData.files[0].id;
-      }
-
-      // Create folder if it doesn't exist
-      const metadata = {
-        name: folderName,
-        mimeType: 'application/vnd.google-apps.folder',
-      };
-
-      if (parentFolderId) {
-        metadata.parents = [parentFolderId];
-      }
-
-      const createResponse = await fetch(
-        'https://www.googleapis.com/drive/v3/files',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(metadata),
-        }
-      );
-
-      const createData = await createResponse.json();
-      return createData.id;
-    } catch (error) {
-      console.error('Error creating folder:', error);
-      throw error;
-    }
-  };
-
-  const createGoogleDoc = async (accessToken, title, content, folderId) => {
-    try {
-      console.log('Creating Google Doc with multipart upload...');
-      console.log('Title:', title);
-      console.log('Folder ID:', folderId);
-      console.log('Content length:', content.length);
-      
-      // Create metadata
-      const metadata = {
-        name: title,
-        mimeType: 'application/vnd.google-apps.document',
-        parents: [folderId]
-      };
-
-      // Create multipart body
-      const boundary = '-------314159265358979323846';
-      const delimiter = "\r\n--" + boundary + "\r\n";
-      const close_delim = "\r\n--" + boundary + "--";
-
-      const multipartRequestBody =
-        delimiter +
-        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
-        JSON.stringify(metadata) +
-        delimiter +
-        'Content-Type: text/plain; charset=UTF-8\r\n\r\n' +
-        content +
-        close_delim;
-
-      const response = await fetch(
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': `multipart/related; boundary=${boundary}`
-          },
-          body: multipartRequestBody
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Create document failed:', response.status, errorText);
-        throw new Error(`Failed to create document: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('Document created successfully:', data);
-      
-      return data.id;
-    } catch (error) {
-      console.error('Error in createGoogleDoc:', error);
-      throw error;
-    }
-  };
-
-  const saveToGoogleDrive = async () => {
-    if (entries.length === 0) {
-      alert('Keine Einträge zum Speichern!');
-      return;
-    }
-
-    // Check if we need to authorize
-    if (!googleAccessToken || !isGoogleAuthorized) {
-      // Check localStorage for existing token
-      const savedToken = localStorage.getItem('google_access_token');
-      if (savedToken) {
-        setGoogleAccessToken(savedToken);
-        setIsGoogleAuthorized(true);
-        // Token is set, function will be called again
-        setTimeout(() => saveToGoogleDrive(), 100);
-        return;
-      }
-
-      // Need to authorize
-      const confirmAuth = confirm('Du musst dich mit Google anmelden um in Drive zu speichern. Jetzt anmelden?');
-      if (!confirmAuth) return;
-
-      await handleGoogleLogin();
-      return; // Will be called again after auth
-    }
-
-    try {
-      setIsSavingToDrive(true);
-      console.log('Starting Google Drive save...');
-
-      // Initialize Google API if needed
-      if (!window.gapi || !window.gapi.client) {
-        console.log('Initializing Google API...');
-        await initializeGoogleAuth();
-      }
-
-      console.log('Finding/creating folders...');
-      // Find or create KettleTrack folder
-      const kettletrackFolderId = await findOrCreateFolder(googleAccessToken, 'KettleTrack');
-      console.log('KettleTrack folder ID:', kettletrackFolderId);
-      
-      // Find or create Logs subfolder
-      const logsFolderId = await findOrCreateFolder(googleAccessToken, 'Logs', kettletrackFolderId);
-      console.log('Logs folder ID:', logsFolderId);
-
-      // Prepare content - FIXED: Better formatting for Google Docs
-      console.log('Preparing content...');
-      const date = new Date().toLocaleDateString('de-DE');
-      const title = `KettleTrack_Log_${new Date().toISOString().split('T')[0]}`;
-      
-      // Create content with better structure
-      let content = `KettleTrack Training Log\n`;
-      content += `Datum: ${date}\n`;
-      content += `Anzahl Einträge: ${entries.length}\n\n`;
-      content += `${'='.repeat(100)}\n\n`;
-      
-      entries.forEach((entry, index) => {
-        content += `Eintrag ${index + 1}:\n`;
-        content += `  Datum: ${entry.date}\n`;
-        content += `  Trainingstag: ${entry.day}\n`;
-        content += `  Runde: ${entry.round}\n`;
-        content += `  Übung: ${entry.exercise}\n`;
-        content += `  Reps/Dauer: ${entry.reps}\n`;
-        if (entry.notes) {
-          content += `  Notizen: ${entry.notes}\n`;
-        }
-        content += `\n${'-'.repeat(100)}\n\n`;
-      });
-
-      console.log('Creating document:', title);
-      console.log('Content preview:', content.substring(0, 200) + '...');
-      console.log('Total content length:', content.length, 'characters');
-      
-      const docId = await createGoogleDoc(googleAccessToken, title, content, logsFolderId);
-      console.log('Document created with ID:', docId);
-
-      setIsSavingToDrive(false);
-      alert(`✅ Erfolgreich in Google Drive gespeichert!\n\nOrdner: KettleTrack/Logs/\nDatei: ${title}\n\n${entries.length} Einträge gespeichert`);
-      
-    } catch (error) {
-      console.error('Error saving to Google Drive:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
-      
-      setIsSavingToDrive(false);
-      
-      if (error.status === 401 || (error.message && error.message.includes('401'))) {
-        // Token expired
-        localStorage.removeItem('google_access_token');
-        setGoogleAccessToken(null);
-        setIsGoogleAuthorized(false);
-        alert('⚠️ Anmeldung abgelaufen. Bitte versuche es erneut.');
-      } else {
-        alert(`⚠️ Fehler beim Speichern in Google Drive.\n\nDetails: ${error.message || 'Unbekannter Fehler'}\n\nBitte öffne die Browser-Konsole (F12) für mehr Details.`);
-      }
-    }
-  };
-
+  // ===== RENDER HELPERS =====
   const currentExercises = currentEntry.day && activePlan[currentEntry.day] 
     ? activePlan[currentEntry.day].exercises 
     : [];
 
+  const exerciseStats = currentEntry.exercise ? getExerciseStats(currentEntry.exercise) : null;
+
+  const formatLastSyncTime = () => {
+    if (!lastSyncTime) return 'Noch nie synchronisiert';
+    return lastSyncTime.toLocaleString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // ===== RENDER =====
   return (
-    <React.Fragment>
-      <div className="container">
-        <div className="card">
-          <div className="header-row">
-            <h1 className="title">Training Log</h1>
-            <button
-              onClick={() => setShowUpload(!showUpload)}
-              className="upload-button"
-            >
-              {showUpload ? 'Schließen' : 'Plan hochladen'}
+    <div className="container">
+      {/* HEADER */}
+      <div className="app-header">
+        <div className="app-header-title">
+          <span className="app-header-icon">🏋️</span>
+          KettleTrack
+        </div>
+      </div>
+
+      {/* NEUER EINTRAG */}
+      <div className="accordion-card">
+        <div className="accordion-header" onClick={() => toggleAccordion('newEntry')}>
+          <div className="accordion-title">
+            <span className="accordion-icon">➕</span>
+            Neuer Eintrag
+          </div>
+          <div className={`accordion-chevron ${accordionStates.newEntry ? 'open' : ''}`}>
+            ▼
+          </div>
+        </div>
+        <div className={`accordion-content ${accordionStates.newEntry ? 'open' : ''}`}>
+          <div className="accordion-body">
+            <div className="form-grid">
+              <div className="form-group">
+                <label className="label">Datum</label>
+                <input
+                  type="date"
+                  value={currentEntry.date}
+                  onChange={(e) => handleInputChange('date', e.target.value)}
+                  className="input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="label">Runde</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={currentEntry.round}
+                  onChange={(e) => handleInputChange('round', e.target.value)}
+                  className="input"
+                  placeholder="1"
+                />
+              </div>
+
+              <div className="form-group form-group-full">
+                <label className="label">Trainingstag</label>
+                <select
+                  value={currentEntry.day}
+                  onChange={(e) => handleInputChange('day', e.target.value)}
+                  className="select"
+                >
+                  <option value="">Wähle einen Tag</option>
+                  {Object.entries(activePlan).map(([day, data]) => (
+                    <option key={day} value={day}>
+                      {day} - {data.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group form-group-full">
+                <label className="label">Übung</label>
+                <select
+                  value={currentEntry.exercise}
+                  onChange={(e) => handleInputChange('exercise', e.target.value)}
+                  disabled={!currentEntry.day}
+                  className="select"
+                >
+                  <option value="">Wähle eine Übung</option>
+                  {currentExercises.map(exercise => (
+                    <option key={exercise} value={exercise}>{exercise}</option>
+                  ))}
+                </select>
+
+                {/* EXERCISE INFO BOX */}
+                {exerciseStats && (
+                  <div className="exercise-info-box">
+                    <div className="exercise-info-title">📊 Letzte Sessions</div>
+                    <div className="exercise-info-stats">
+                      {exerciseStats.recent.map((reps, idx) => (
+                        <div key={idx} className="exercise-info-stat">
+                          <span className="exercise-info-label">
+                            {idx === 0 ? '🔥 Letztes Mal:' : `${idx + 1}. davor:`}
+                          </span>
+                          <span className="exercise-info-value">{reps}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group form-group-full">
+                <label className="label">Reps / Dauer</label>
+                <input
+                  type="text"
+                  value={currentEntry.reps}
+                  onChange={(e) => handleInputChange('reps', e.target.value)}
+                  placeholder="z.B. 40 gesamt, rechts: 20 | links: 20"
+                  className="input"
+                />
+              </div>
+
+              <div className="form-group form-group-full">
+                <label className="label">Notizen (optional)</label>
+                <input
+                  type="text"
+                  value={currentEntry.notes}
+                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  placeholder="z.B. Mega intensiv, neuer Peak..."
+                  className="input"
+                />
+              </div>
+            </div>
+
+            <button onClick={addEntry} className="button-primary">
+              Eintrag hinzufügen
             </button>
           </div>
-          <p className="subtitle">Erfasse deine Trainingseinheiten</p>
-          
-          {showUpload && (
-            <div className="upload-section">
-              <label className="label">
-                Trainingsplan hochladen (.md)
-              </label>
+        </div>
+      </div>
+
+      {/* MEINE EINTRÄGE */}
+      {entries.length > 0 && (
+        <div className="accordion-card">
+          <div className="accordion-header" onClick={() => toggleAccordion('myEntries')}>
+            <div className="accordion-title">
+              <span className="accordion-icon">📊</span>
+              Meine Einträge ({entries.length})
+            </div>
+            <div className={`accordion-chevron ${accordionStates.myEntries ? 'open' : ''}`}>
+              ▼
+            </div>
+          </div>
+          <div className={`accordion-content ${accordionStates.myEntries ? 'open' : ''}`}>
+            <div className="accordion-body">
+              <div className="entries-list">
+                {entries.map(entry => (
+                  <div key={entry.id} className="entry-card">
+                    <div className="entry-row">
+                      <div className="entry-content">
+                        <div className="entry-badges">
+                          <span className="badge badge-date">{entry.date}</span>
+                          <span className="badge badge-day">{entry.day}</span>
+                          <span className="badge badge-round">R{entry.round}</span>
+                        </div>
+                        <div className="entry-exercise">{entry.exercise}</div>
+                        <div className="entry-reps">
+                          {entry.reps}
+                          {entry.notes && <span className="entry-notes">· {entry.notes}</span>}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeEntry(entry.id)}
+                        className="delete-button"
+                        title="Eintrag löschen"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="button-grid">
+                <button onClick={copyToClipboard} className="button-secondary">
+                  📋 Zwischenablage
+                </button>
+                <button onClick={shareToGoogleDrive} className="button-secondary">
+                  📤 Teilen (.md)
+                </button>
+                <button onClick={saveToGoogleDrive} className="button-primary" disabled={isSavingToDrive}>
+                  {isSavingToDrive ? (
+                    <>
+                      <span className="spinner"></span> Speichere...
+                    </>
+                  ) : (
+                    '💾 In Drive speichern'
+                  )}
+                </button>
+                <button onClick={generateMarkdown} className="button-secondary">
+                  📥 Download (.md)
+                </button>
+                <button onClick={clearAllEntries} className="button-secondary button-danger button-grid-full">
+                  🗑️ Alle Einträge löschen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SYNCHRONISIERUNG */}
+      <div className="accordion-card">
+        <div className="accordion-header" onClick={() => toggleAccordion('sync')}>
+          <div className="accordion-title">
+            <span className="accordion-icon">🔄</span>
+            Synchronisierung
+          </div>
+          <div className={`accordion-chevron ${accordionStates.sync ? 'open' : ''}`}>
+            ▼
+          </div>
+        </div>
+        <div className={`accordion-content ${accordionStates.sync ? 'open' : ''}`}>
+          <div className="accordion-body">
+            <div className="sync-status">
+              <strong>Letzter Sync:</strong> {formatLastSyncTime()}
+            </div>
+
+            <button 
+              onClick={syncLastSevenDays} 
+              className="button-primary"
+              disabled={isSyncing}
+            >
+              {isSyncing ? (
+                <>
+                  <span className="spinner"></span> Synchronisiere...
+                </>
+              ) : (
+                '🔄 Jetzt synchronisieren'
+              )}
+            </button>
+
+            <div className="sync-hint">
+              <span>💡</span>
+              <span>Lädt die letzten 7 Tage aus Google Drive und aktualisiert deine Vergleichswerte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* EINSTELLUNGEN */}
+      <div className="accordion-card">
+        <div className="accordion-header" onClick={() => toggleAccordion('settings')}>
+          <div className="accordion-title">
+            <span className="accordion-icon">⚙️</span>
+            Einstellungen
+          </div>
+          <div className={`accordion-chevron ${accordionStates.settings ? 'open' : ''}`}>
+            ▼
+          </div>
+        </div>
+        <div className={`accordion-content ${accordionStates.settings ? 'open' : ''}`}>
+          <div className="accordion-body">
+            {/* Trainingsplan hochladen */}
+            <div className="settings-item">
+              <label className="settings-label">📤 Trainingsplan hochladen</label>
               <input
                 type="file"
                 accept=".md,.txt"
@@ -1018,188 +1572,40 @@ const TrainingLogForm = () => {
                 className="file-input"
               />
               <p className="help-text">
-                Lade deine Trainingsplan-Datei hoch um die Übungen zu aktualisieren
+                Lade deine Trainingsplan-Datei hoch (.md Format)
               </p>
             </div>
-          )}
-        </div>
 
-        <div className="card">
-          <h2 className="section-title">Neuer Eintrag</h2>
-
-          <div className="form-grid">
-            <div className="form-group">
-              <label className="label">Datum</label>
-              <input
-                type="date"
-                value={currentEntry.date}
-                onChange={(e) => handleInputChange('date', e.target.value)}
-                className="input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="label">Runde</label>
-              <input
-                type="number"
-                min="1"
-                value={currentEntry.round}
-                onChange={(e) => handleInputChange('round', e.target.value)}
-                className="input"
-                placeholder="1"
-              />
-            </div>
-
-            <div className="form-group form-group-full">
-              <label className="label">Trainingstag</label>
-              <select
-                value={currentEntry.day}
-                onChange={(e) => handleInputChange('day', e.target.value)}
-                className="select"
-              >
-                <option value="">Wähle einen Tag</option>
-                {Object.entries(activePlan).map(([day, data]) => (
-                  <option key={day} value={day}>
-                    {day} - {data.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group form-group-full">
-              <label className="label">Übung</label>
-              <select
-                value={currentEntry.exercise}
-                onChange={(e) => handleInputChange('exercise', e.target.value)}
-                disabled={!currentEntry.day}
-                className="select"
-              >
-                <option value="">Wähle eine Übung</option>
-                {currentExercises.map(exercise => (
-                  <option key={exercise} value={exercise}>{exercise}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group form-group-full">
-              <label className="label">Reps / Dauer</label>
-              <input
-                type="text"
-                value={currentEntry.reps}
-                onChange={(e) => handleInputChange('reps', e.target.value)}
-                placeholder="z.B. 40 gesamt, rechts: 20 | links: 20"
-                className="input"
-              />
-            </div>
-
-            <div className="form-group form-group-full">
-              <label className="label">Notizen (optional)</label>
-              <input
-                type="text"
-                value={currentEntry.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                placeholder="z.B. Mega intensiv, neuer Peak..."
-                className="input"
-              />
-            </div>
-          </div>
-
-          <button onClick={addEntry} className="button-primary">
-            Eintrag hinzufügen
-          </button>
-        </div>
-
-        {entries.length > 0 && (
-          <div className="card">
-            <h2 className="section-title">
-              Erfasste Einträge ({entries.length})
-            </h2>
-
-            <div className="entries-list">
-              {entries.map(entry => (
-                <div key={entry.id} className="entry-card">
-                  <div className="entry-row">
-                    <div className="entry-content">
-                      <div className="entry-badges">
-                        <span className="badge badge-date">{entry.date}</span>
-                        <span className="badge badge-day">{entry.day}</span>
-                        <span className="badge badge-round">R{entry.round}</span>
-                      </div>
-                      <div className="entry-exercise">{entry.exercise}</div>
-                      <div className="entry-reps">
-                        {entry.reps}
-                        {entry.notes && <span className="entry-notes">· {entry.notes}</span>}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => removeEntry(entry.id)}
-                      className="delete-button"
-                    >
-                      ×
-                    </button>
+            {/* Google Account */}
+            <div className="settings-item">
+              <label className="settings-label">🔐 Google Account</label>
+              {isGoogleAuthorized ? (
+                <>
+                  <div className="google-account-status google-account-connected">
+                    ✅ Mit Google Drive verbunden
                   </div>
-                </div>
-              ))}
+                  <button onClick={handleGoogleLogout} className="button-secondary">
+                    Abmelden
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="google-account-status">
+                    ⚠️ Nicht verbunden
+                  </div>
+                  <button onClick={handleGoogleLogin} className="button-primary">
+                    Mit Google anmelden
+                  </button>
+                </>
+              )}
+              <p className="help-text">
+                Verbinde dich mit Google Drive um deine Logs zu speichern und zu synchronisieren
+              </p>
             </div>
-
-            <div className="button-grid">
-              <button onClick={copyToClipboard} className="button-secondary">
-                In Zwischenablage kopieren
-              </button>
-              <button onClick={shareToGoogleDrive} className="button-secondary">
-                📤 Teilen (.md)
-              </button>
-              <button onClick={saveToGoogleDrive} className="button-primary" disabled={isSavingToDrive}>
-                {isSavingToDrive ? '⏳ Speichere...' : '💾 In Drive speichern'}
-              </button>
-            </div>
-            <button onClick={generateMarkdown} className="button-secondary" style={{marginTop: '0.75rem', width: '100%'}}>
-              📥 Als Markdown herunterladen
-            </button>
           </div>
-        )}
-
-        <div className="card">
-          <h3 className="label">Tipps</h3>
-          <ul className="tips-list">
-            <li>• <strong>💾 In Drive speichern:</strong> Speichert als Google Doc in KettleTrack/Logs/ (Claude kann diese Dateien lesen!)</li>
-            <li>• <strong>📤 Teilen:</strong> Natives Share-Menü deines Geräts (als .md Datei)</li>
-            <li>• <strong>📥 Markdown herunterladen:</strong> Lädt .md Datei auf dein Gerät</li>
-            <li>• Datum, Tag und Runde bleiben nach dem Eintrag gesetzt</li>
-            <li>• Runden können beliebig hoch eingegeben werden</li>
-            <li>• Format einarmig: "rechts: 20 | links: 20"</li>
-            <li>• Format Core: "60s + 15 Sit-ups"</li>
-            <li>• Trainingsplan hochladen um Übungen zu aktualisieren</li>
-            <li>• Deine Daten werden lokal auf deinem Gerät gespeichert</li>
-          </ul>
         </div>
       </div>
-
-      {showInstallBanner && (
-        <div className={`install-banner ${showInstallBanner ? 'show' : ''}`}>
-          <div className="install-banner-content">
-            <div className="install-banner-title">KettleTrack installieren</div>
-            <div className="install-banner-text">
-              Installiere die App für schnellen Zugriff und Offline-Nutzung
-            </div>
-          </div>
-          <div className="install-banner-buttons">
-            <button 
-              onClick={handleInstallClick}
-              className="install-banner-button install-banner-button-primary"
-            >
-              Installieren
-            </button>
-            <button 
-              onClick={handleInstallDismiss}
-              className="install-banner-button install-banner-button-secondary"
-            >
-              Später
-            </button>
-          </div>
-        </div>
-      )}
-    </React.Fragment>
+    </div>
   );
 };
 
