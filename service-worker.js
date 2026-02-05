@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kettletrack-v1';
+const CACHE_NAME = 'kettletrack-v2';
 const urlsToCache = [
   './kettletrack-pwa.html',
   './manifest.json',
