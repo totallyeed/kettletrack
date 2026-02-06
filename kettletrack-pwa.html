@@ -574,24 +574,35 @@ input[type="date"] {
 }
 
 .reps-row {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  align-items: center;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  position: relative;
 }
 
 .reps-row:last-of-type {
   margin-bottom: 0.75rem;
 }
 
+.reps-row-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .reps-value-input {
+  flex: 1;
   padding: 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   font-size: 0.875rem;
   outline: none;
-  height: 2.25rem;
+  min-height: 2.5rem;
 }
 
 .reps-value-input:focus {
@@ -601,17 +612,18 @@ input[type="date"] {
 
 .reps-unit-wrapper {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
 .reps-unit-select {
-  flex: 1;
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   font-size: 0.875rem;
   outline: none;
-  height: 2.25rem;
+  min-height: 2.5rem;
   -webkit-appearance: none;
   appearance: none;
   background: white;
@@ -623,13 +635,13 @@ input[type="date"] {
 }
 
 .reps-custom-input {
-  flex: 1;
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   font-size: 0.875rem;
   outline: none;
-  height: 2.25rem;
+  min-height: 2.5rem;
 }
 
 .reps-custom-input:focus {
@@ -643,8 +655,8 @@ input[type="date"] {
   color: #dc2626;
   font-size: 1.25rem;
   font-weight: 600;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 0.375rem;
   cursor: pointer;
   display: flex;
@@ -653,6 +665,7 @@ input[type="date"] {
   transition: all 0.2s;
   line-height: 1;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .reps-remove-btn:hover {
@@ -672,7 +685,7 @@ input[type="date"] {
   color: #374151;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.5rem;
+  padding: 0.625rem;
   border-radius: 0.375rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -680,6 +693,7 @@ input[type="date"] {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 2.5rem;
 }
 
 .reps-add-btn:hover {
@@ -709,6 +723,7 @@ input[type="date"] {
 
 .reps-preview-value {
   color: #166534;
+  word-break: break-word;
 }
     </style>
 </head>
@@ -1647,13 +1662,25 @@ const TrainingLogForm = () => {
                 <div className="reps-builder">
                   {repsRows.map(row => (
                     <div key={row.id} className="reps-row">
-                      <input
-                        type="text"
-                        value={row.value}
-                        onChange={(e) => updateRepsRow(row.id, 'value', e.target.value)}
-                        placeholder="Anzahl"
-                        className="reps-value-input"
-                      />
+                      <div className="reps-row-header">
+                        <input
+                          type="text"
+                          value={row.value}
+                          onChange={(e) => updateRepsRow(row.id, 'value', e.target.value)}
+                          placeholder="Anzahl"
+                          className="reps-value-input"
+                        />
+                        
+                        <button
+                          type="button"
+                          onClick={() => removeRepsRow(row.id)}
+                          disabled={repsRows.length === 1}
+                          className="reps-remove-btn"
+                          title="Zeile entfernen"
+                        >
+                          ×
+                        </button>
+                      </div>
                       
                       <div className="reps-unit-wrapper">
                         <select
@@ -1678,16 +1705,6 @@ const TrainingLogForm = () => {
                           />
                         )}
                       </div>
-                      
-                      <button
-                        type="button"
-                        onClick={() => removeRepsRow(row.id)}
-                        disabled={repsRows.length === 1}
-                        className="reps-remove-btn"
-                        title="Zeile entfernen"
-                      >
-                        ×
-                      </button>
                     </div>
                   ))}
                   
