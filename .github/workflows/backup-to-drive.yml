@@ -1,0 +1,197 @@
+name: Backup to Google Drive
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'kettletrack-pwa.html'
+      - 'service-worker.js'
+      - 'manifest.json'
+      - 'README.md'
+      - 'CHANGELOG.md'
+  
+  release:
+    types: [published]
+  
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: Backup to Google Drive
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 📅 Generate Backup Name
+        id: backup-name
+        run: |
+          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
+          COMMIT_SHORT=$(git rev-parse --short HEAD)
+          BACKUP_NAME="KettleTrack_${TIMESTAMP}_${COMMIT_SHORT}"
+          echo "name=$BACKUP_NAME" >> $GITHUB_OUTPUT
+          echo "📦 Backup Name: $BACKUP_NAME"
+      
+      - name: 🗜️ Create Backup Archive
+        run: |
+          zip -r backup.zip . \
+            -x "*.git*" \
+            -x "*node_modules*" \
+            -x "*.DS_Store" \
+            -x "*backup.zip"
+          
+          echo "📊 Backup Size:"
+          ls -lh backup.zip
+      
+      - name: 🔧 Setup rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          
+          mkdir -p ~/.config/rclone
+          
+          echo '${{ secrets.GOOGLE_DRIVE_SA_JSON }}' > sa.json
+          
+          cat > ~/.config/rclone/rclone.conf << EOF
+          [gdrive]
+          type = drive
+          scope = drive
+          service_account_file = $(pwd)/sa.json
+          team_drive = 
+          EOF
+          
+          echo "✅ rclone configured"
+      
+      - name: 🚀 Upload to Google Drive
+        env:
+          FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          BACKUP_NAME: ${{ steps.backup-name.outputs.name }}
+        run: |
+          rclone copy backup.zip gdrive:$FOLDER_ID \
+            --drive-use-trash=false \
+            --stats 1s \
+            --verbose
+          
+          rclone moveto \
+            "gdrive:$FOLDER_ID/backup.zip" \
+            "gdrive:$FOLDER_ID/${BACKUP_NAME}.zip" \
+            --drive-use-trash=false
+          
+          echo "✅ Backup uploaded: ${BACKUP_NAME}.zip"
+      
+      - name: 🧹 Cleanup old backups (keep last 10)
+        env:
+          FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+        run: |
+          rclone ls gdrive:$FOLDER_ID --max-depth 1 | \
+            grep "KettleTrack_.*\.zip" | \
+            sort -r | \
+            tail -n +11 | \
+            while read size filename; do
+              echo "🗑️  Deleting old backup: $filename"
+              rclone delete "gdrive:$FOLDER_ID/$filename" --drive-use-trash=false
+            done
+          
+          echo "✅ Cleanup complete"
+      
+      - name: 🔒 Cleanup Secrets
+        if: always()
+        run: |
+          rm -f sa.json
+          rm -f backup.zip
+          rm -rf ~/.config/rclone
+      
+      - name: 📊 Backup Summary
+        run: |
+          echo "## 🎉 Backup Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Backup Name:** \`${{ steps.backup-name.outputs.name }}.zip\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Uploaded to Google Drive successfully" >> $GITHUB_STEP_SUMMARY
+```
+
+#### 4. Committen
+
+Scrolle runter zum **"Commit changes"** Bereich:
+```
+Commit message: Add automated Google Drive backup workflow
+Extended description: (leer lassen)
+```
+
+Wähle: **"Commit directly to the main branch"**
+
+Klicke: **"Commit changes"**
+
+---
+
+## Das war's! 🎉
+
+Die Datei ist jetzt auf GitHub und der Workflow ist **sofort aktiv**.
+
+---
+
+## Wie es funktioniert
+```
+┌──────────────────────────────────────────────────────┐
+│ DU erstellst .yaml Datei auf GitHub.com              │
+└──────────────────────────────────────────────────────┘
+                        ↓
+┌──────────────────────────────────────────────────────┐
+│ GitHub Actions liest die .yaml Datei                 │
+└──────────────────────────────────────────────────────┘
+                        ↓
+┌──────────────────────────────────────────────────────┐
+│ Bei jedem Push:                                      │
+│ 1. GitHub lädt dein Repository runter (in der Cloud) │
+│ 2. Erstellt ZIP                                      │
+│ 3. Lädt zu Google Drive hoch                         │
+└──────────────────────────────────────────────────────┘
+```
+
+**Wichtig:** Der Workflow läuft **in der GitHub Cloud**, nicht auf deinem Mac!
+
+GitHub:
+- Checkt automatisch dein Repository aus
+- Hat Zugriff auf alle Dateien
+- Macht das Backup
+- Lädt zu Drive hoch
+
+Alles passiert auf **GitHub Servern**, du brauchst nichts lokal!
+
+---
+
+## Workflow testen
+
+Nach dem Commit:
+
+1. Gehe zu deinem Repository auf GitHub
+2. Klicke auf **"Actions"** (oben in der Navigation)
+3. Du solltest den Workflow sehen: **"Backup to Google Drive"**
+4. Klicke drauf
+5. Klicke **"Run workflow"** → **"Run workflow"** (grüner Button)
+6. Warte 1-2 Minuten
+7. Prüfe Google Drive → KettleTrack → GitHub-Backups
+
+---
+
+## Zu deiner Frage: Google Drive vs. lokal
+
+**Du hast absolut recht!**
+
+- ❌ Du brauchst **KEIN** lokales Git Repository
+- ❌ Du brauchst **KEINE** Dateien auf deinem Mac
+- ✅ Du brauchst **NUR** die `.yaml` Datei auf GitHub
+- ✅ GitHub Actions macht den Rest in der Cloud
+
+**Dein Workflow kann bleiben wie er ist:**
+```
+Du arbeitest in Google Drive
+     ↓
+Lädst zu GitHub hoch (wie bisher)
+     ↓
+GitHub Actions macht automatisch Backup
