@@ -41,19 +41,22 @@ jobs:
           curl https://rclone.org/install.sh | sudo bash
           mkdir -p ~/.config/rclone
           echo '${{ secrets.GOOGLE_DRIVE_SA_JSON }}' > sa.json
-          cat > ~/.config/rclone/rclone.conf << 'RCLONE_EOF'
+          PWD=$(pwd)
+          cat > ~/.config/rclone/rclone.conf << RCLONE_EOF
           [gdrive]
           type = drive
           scope = drive
-          service_account_file = /home/runner/work/KettleTrack/KettleTrack/sa.json
+          service_account_file = ${PWD}/sa.json
           RCLONE_EOF
+          cat ~/.config/rclone/rclone.conf
+          ls -la sa.json
       
       - name: Upload to Google Drive
         env:
           FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
           BACKUP_NAME: ${{ steps.backup-name.outputs.name }}
         run: |
-          rclone copy backup.zip gdrive:$FOLDER_ID --drive-use-trash=false
+          rclone copy backup.zip gdrive:$FOLDER_ID --drive-use-trash=false --verbose
           rclone moveto "gdrive:$FOLDER_ID/backup.zip" "gdrive:$FOLDER_ID/${BACKUP_NAME}.zip" --drive-use-trash=false
       
       - name: Cleanup old backups
