@@ -1,0 +1,90 @@
+name: Backup to Google Drive
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'kettletrack-pwa.html'
+      - 'service-worker.js'
+      - 'manifest.json'
+      - 'README.md'
+      - 'CHANGELOG.md'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: Backup to Google Drive
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Generate Backup Name
+        id: backup-name
+        run: |
+          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
+          COMMIT_SHORT=$(git rev-parse --short HEAD)
+          BACKUP_NAME="KettleTrack_${TIMESTAMP}_${COMMIT_SHORT}"
+          echo "name=$BACKUP_NAME" >> $GITHUB_OUTPUT
+          echo "Backup Name: $BACKUP_NAME"
+      
+      - name: Create Backup Archive
+        run: |
+          zip -r backup.zip . -x "*.git*" -x "*node_modules*" -x "*.DS_Store" -x "*backup.zip"
+          echo "Backup Size:"
+          ls -lh backup.zip
+      
+      - name: Setup rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          echo '${{ secrets.GOOGLE_DRIVE_SA_JSON }}' > sa.json
+          cat > ~/.config/rclone/rclone.conf << 'RCLONE_EOF'
+          [gdrive]
+          type = drive
+          scope = drive
+          service_account_file = /home/runner/work/KettleTrack/KettleTrack/sa.json
+          RCLONE_EOF
+          echo "rclone configured"
+      
+      - name: Upload to Google Drive
+        env:
+          FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          BACKUP_NAME: ${{ steps.backup-name.outputs.name }}
+        run: |
+          rclone copy backup.zip gdrive:$FOLDER_ID --drive-use-trash=false --stats 1s --verbose
+          rclone moveto "gdrive:$FOLDER_ID/backup.zip" "gdrive:$FOLDER_ID/${BACKUP_NAME}.zip" --drive-use-trash=false
+          echo "Backup uploaded: ${BACKUP_NAME}.zip"
+      
+      - name: Cleanup old backups
+        env:
+          FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+        run: |
+          rclone ls gdrive:$FOLDER_ID --max-depth 1 | grep "KettleTrack_.*\.zip" | sort -r | tail -n +11 | while read size filename; do
+            echo "Deleting old backup: $filename"
+            rclone delete "gdrive:$FOLDER_ID/$filename" --drive-use-trash=false
+          done
+          echo "Cleanup complete"
+      
+      - name: Cleanup Secrets
+        if: always()
+        run: |
+          rm -f sa.json
+          rm -f backup.zip
+          rm -rf ~/.config/rclone
+      
+      - name: Backup Summary
+        run: |
+          echo "## Backup Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Backup Name:** ${{ steps.backup-name.outputs.name }}.zip" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Uploaded to Google Drive successfully" >> $GITHUB_STEP_SUMMARY
