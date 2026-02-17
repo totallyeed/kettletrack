@@ -889,7 +889,7 @@ const TrainingLogForm = () => {
       }
       return history;
     });
-  }, []);
+  }, [exerciseHistory]);
 
   const getExerciseStats = (name) => {
     const h = exerciseHistory[name];
@@ -1139,8 +1139,6 @@ const TrainingLogForm = () => {
     settings: 'Google Drive & Plan',
   };
 
-  // ===== RENDER =====
-  return (
   // ===== RENDER =====
   return (
     <>
