@@ -16,14 +16,15 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
   --off-white: #F0F2F4;
-  --accent: #006b78;
-  --accent-light: rgba(0, 107, 120, 0.12);
-  --accent-border: rgba(0, 107, 120, 0.25);
+  --accent: #8a9199;
+  --accent-light: rgba(138, 145, 153, 0.12);
+  --accent-border: rgba(138, 145, 153, 0.3);
   --text-primary: #1C1C1E;
   --text-secondary: #6b7280;
   --glass-bg: rgba(255, 255, 255, 0.65);
@@ -48,8 +49,8 @@ body {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(0, 107, 120, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(0, 107, 120, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 20%, rgba(138, 145, 153, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(138, 145, 153, 0.07) 0%, transparent 60%),
     linear-gradient(180deg, #F0F2F4 0%, #E8ECEF 100%);
   z-index: 0;
 }
@@ -68,36 +69,10 @@ body {
 
 /* ===== HEADER ===== */
 .app-header {
-  padding: 3.5rem 1.5rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 3.5rem 1.5rem 1rem;
 }
 
-.app-header-left h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  line-height: 1;
-}
-
-.app-header-left p {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-top: 0.25rem;
-}
-
-.header-badge {
-  background: var(--accent-light);
-  border: 1px solid var(--accent-border);
-  color: var(--accent);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.375rem 0.75rem;
-  border-radius: 999px;
-  letter-spacing: 0.02em;
-}
+.header-badge { display: none; }
 
 /* ===== MAIN CONTENT AREA ===== */
 .main-content {
@@ -606,12 +581,11 @@ input[type="date"] { min-height: 3rem; }
   left: 0;
   right: 0;
   padding: 0 1rem 1rem;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
 }
 
 .tile-nav-wrapper.hidden {
-  transform: translateY(calc(100% + 1rem));
+  display: none;
 }
 
 .tile-nav-toggle {
@@ -759,6 +733,68 @@ input[type="date"] { min-height: 3rem; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ===== STATISTIK ===== */
+.stats-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.stats-mini-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.stats-mini-card {
+  background: var(--glass-bg-strong);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 0.75rem;
+  text-align: center;
+}
+
+.stats-mini-card-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.stats-mini-card-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stats-chart-wrapper {
+  background: var(--glass-bg-strong);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stats-chart-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.stats-empty {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
   .app-header { padding: 3rem 1rem 1rem; }
@@ -780,6 +816,7 @@ const ICONS = {
   settings: <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
   chevronUp: <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>,
   menu: <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  chart: <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
 };
 
 const WEIGHTS = ['', '4', '6', '8', '10', '12', '14', '16', '20', '24', '28', '32'];
@@ -808,6 +845,9 @@ const TrainingLogForm = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isSavingToDrive, setIsSavingToDrive] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [statsExercise, setStatsExercise] = useState('');
+  const [statsMode, setStatsMode] = useState('sessions'); // 'sessions' | 'days' | 'volume'
+  const [statsRange, setStatsRange] = useState('10');
 
   const [currentEntry, setCurrentEntry] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -854,6 +894,46 @@ const TrainingLogForm = () => {
       localStorage.setItem('kettletrack-exercise-history', JSON.stringify(exerciseHistory));
   }, [exerciseHistory]);
 
+  // ===== CHART.JS RENDERING =====
+  useEffect(() => {
+    if (activeSection !== 'stats') return;
+    const statsData = getStatsData();
+    if (!statsData.labels.length) return;
+    const canvas = document.getElementById('statsChart');
+    if (!canvas || !window.Chart) return;
+
+    // Destroy existing chart
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
+
+    const isBar = statsMode === 'volume';
+    new Chart(canvas, {
+      type: isBar ? 'bar' : 'line',
+      data: {
+        labels: statsData.labels,
+        datasets: [{
+          label: isBar ? 'Volumen (Reps gesamt)' : 'Reps',
+          data: statsData.values,
+          borderColor: '#8a9199',
+          backgroundColor: isBar ? 'rgba(138,145,153,0.3)' : 'rgba(138,145,153,0.1)',
+          borderWidth: 2,
+          fill: !isBar,
+          tension: 0.3,
+          pointBackgroundColor: '#8a9199',
+          pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#6b7280', font: { size: 11 } } },
+          x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 11 } } }
+        }
+      }
+    });
+  }, [activeSection, statsExercise, statsMode, statsRange, exerciseHistory]);
+
   // ===== REPS =====
   useEffect(() => {
     const str = repsRows
@@ -895,6 +975,75 @@ const TrainingLogForm = () => {
     const h = exerciseHistory[name];
     if (!h || h.length === 0) return null;
     return { recent: h.slice(0, 3).map(x => x.reps) };
+  };
+
+  // ===== STATISTIK HELPERS =====
+  const parseRepsNumber = (repsStr) => {
+    if (!repsStr) return null;
+    // Remove weight prefix like "16kg - "
+    const cleaned = repsStr.replace(/^\d+kg\s*[-–]\s*/, '');
+    // Try to extract numbers: "50 rechts | 50 links" → 100, "60 gesamt" → 60
+    const numbers = cleaned.match(/\d+/g);
+    if (!numbers) return null;
+    return numbers.reduce((sum, n) => sum + parseInt(n), 0);
+  };
+
+  const getStatsData = () => {
+    const allExercises = Object.keys(exerciseHistory).sort();
+    if (statsMode === 'volume') {
+      // Volumen pro Woche aus exerciseHistory aller Übungen
+      const range = parseInt(statsRange) || 30;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - range);
+      const weeklyVolume = {};
+      Object.values(exerciseHistory).forEach(sessions => {
+        sessions.forEach(s => {
+          const d = new Date(s.date);
+          if (d < cutoff) return;
+          // Get week label (Mon of that week)
+          const mon = new Date(d);
+          mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+          const label = `${mon.getDate().toString().padStart(2,'0')}.${(mon.getMonth()+1).toString().padStart(2,'0')}`;
+          const val = parseRepsNumber(s.reps);
+          if (val) weeklyVolume[label] = (weeklyVolume[label] || 0) + val;
+        });
+      });
+      const sorted = Object.entries(weeklyVolume).sort((a,b) => a[0].localeCompare(b[0]));
+      return { labels: sorted.map(x=>x[0]), values: sorted.map(x=>x[1]), allExercises };
+    }
+
+    // Per-exercise modes
+    if (!statsExercise) return { labels: [], values: [], allExercises };
+    const history = exerciseHistory[statsExercise];
+    if (!history || history.length === 0) return { labels: [], values: [], allExercises };
+
+    let filtered = [...history];
+    if (statsMode === 'days') {
+      const range = parseInt(statsRange) || 30;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - range);
+      filtered = filtered.filter(s => new Date(s.date) >= cutoff);
+    } else {
+      // sessions mode
+      filtered = filtered.slice(0, parseInt(statsRange) || 10);
+    }
+    filtered.reverse(); // oldest first for chart
+
+    const labels = filtered.map(s => {
+      const d = new Date(s.date);
+      return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}`;
+    });
+    const values = filtered.map(s => parseRepsNumber(s.reps) || 0);
+
+    // Mini card stats
+    const validValues = values.filter(v => v > 0);
+    const max = validValues.length ? Math.max(...validValues) : 0;
+    const avg = validValues.length ? Math.round(validValues.reduce((a,b)=>a+b,0) / validValues.length) : 0;
+    const trend = validValues.length >= 2
+      ? validValues[validValues.length-1] - validValues[0] > 0 ? '↑' : validValues[validValues.length-1] - validValues[0] < 0 ? '↓' : '→'
+      : '—';
+
+    return { labels, values, max, avg, trend, allExercises };
   };
 
   // ===== PARSERS =====
@@ -974,7 +1123,7 @@ const TrainingLogForm = () => {
     try {
       setIsSyncing(true);
       const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 30);
       const params = new URLSearchParams({
         q: `name contains 'KettleTrack_Log_' and mimeType='application/vnd.google-apps.document' and modifiedTime > '${sevenDaysAgo.toISOString()}' and trashed=false`,
         fields: 'files(id, name, modifiedTime)', orderBy: 'modifiedTime desc'
@@ -1123,6 +1272,7 @@ const TrainingLogForm = () => {
     myEntries: `Einträge${entries.length > 0 ? ` (${entries.length})` : ''}`,
     sync: 'Synchronisierung',
     settings: 'Einstellungen',
+    stats: 'Statistiken',
   };
 
   const TILE_ICONS = {
@@ -1130,6 +1280,7 @@ const TrainingLogForm = () => {
     myEntries: ICONS.list,
     sync: ICONS.sync,
     settings: ICONS.settings,
+    stats: ICONS.chart,
   };
 
   const TILE_SUB = {
@@ -1137,6 +1288,7 @@ const TrainingLogForm = () => {
     myEntries: entries.length === 0 ? 'Keine Einträge' : `${entries.length} Einträge`,
     sync: lastSyncTime ? formatSyncTime() : 'Nicht synchronisiert',
     settings: 'Google Drive & Plan',
+    stats: `${Object.keys(exerciseHistory).length} Übungen`,
   };
 
   // ===== RENDER =====
@@ -1147,10 +1299,8 @@ const TrainingLogForm = () => {
         {/* HEADER */}
         <div className="app-header">
           <div className="app-header-left">
-            <h1>KettleTrack</h1>
-            <p>{SECTIONS[activeSection]}</p>
+            <p style={{fontSize:'1rem', fontWeight:600, color:'var(--text-secondary)', letterSpacing:'0.01em'}}>{SECTIONS[activeSection]}</p>
           </div>
-          <div className="header-badge">v2.1</div>
         </div>
 
         {/* MAIN CONTENT */}
@@ -1367,6 +1517,81 @@ const TrainingLogForm = () => {
               </div>
             </div>
           )}
+
+          {/* ===== STATISTIKEN ===== */}
+          {activeSection === 'stats' && (() => {
+            const statsData = getStatsData();
+            const hasData = statsData.labels.length > 0;
+            return (
+              <div className="glass-card">
+                <div className="stats-filter-row">
+                  <div>
+                    <label className="label">Ansicht</label>
+                    <select value={statsMode} onChange={e => setStatsMode(e.target.value)} className="select">
+                      <option value="sessions">Letzte X Sessions</option>
+                      <option value="days">Letzte X Tage</option>
+                      <option value="volume">Wochenvolumen</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label">{statsMode === 'sessions' ? 'Sessions' : 'Tage'}</label>
+                    <select value={statsRange} onChange={e => setStatsRange(e.target.value)} className="select">
+                      {statsMode === 'sessions'
+                        ? ['5','10','20'].map(v => <option key={v} value={v}>Letzte {v}</option>)
+                        : ['7','14','30'].map(v => <option key={v} value={v}>{v} Tage</option>)
+                      }
+                    </select>
+                  </div>
+                </div>
+                {statsMode !== 'volume' && (
+                  <div className="form-group">
+                    <label className="label">Übung</label>
+                    <select value={statsExercise} onChange={e => setStatsExercise(e.target.value)} className="select">
+                      <option value="">Übung wählen</option>
+                      {statsData.allExercises.map(ex => <option key={ex} value={ex}>{ex}</option>)}
+                    </select>
+                  </div>
+                )}
+                {!hasData ? (
+                  <div className="stats-empty">
+                    {statsMode === 'volume'
+                      ? 'Noch keine Sync-Daten. Bitte synchronisieren.'
+                      : statsExercise
+                        ? 'Keine Daten für diese Übung im gewählten Zeitraum.'
+                        : 'Übung wählen um Statistiken anzuzeigen.'
+                    }
+                  </div>
+                ) : (
+                  <>
+                    {statsMode !== 'volume' && (
+                      <div className="stats-mini-cards">
+                        <div className="stats-mini-card">
+                          <div className="stats-mini-card-value">{statsData.max}</div>
+                          <div className="stats-mini-card-label">Rekord</div>
+                        </div>
+                        <div className="stats-mini-card">
+                          <div className="stats-mini-card-value">{statsData.avg}</div>
+                          <div className="stats-mini-card-label">Ø Reps</div>
+                        </div>
+                        <div className="stats-mini-card">
+                          <div className="stats-mini-card-value" style={{color: statsData.trend === '↑' ? '#16a34a' : statsData.trend === '↓' ? '#dc2626' : 'inherit'}}>
+                            {statsData.trend}
+                          </div>
+                          <div className="stats-mini-card-label">Trend</div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="stats-chart-wrapper">
+                      <div className="stats-chart-title">
+                        {statsMode === 'volume' ? `Wochenvolumen (letzte ${statsRange} Tage)` : `${statsExercise} – Reps`}
+                      </div>
+                      <canvas id="statsChart" height="200"></canvas>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* ===== TILE NAVIGATION ===== */}
